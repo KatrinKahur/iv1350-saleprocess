@@ -16,4 +16,12 @@ public class View {
         this.contr = contr;
     }
 
+    /**
+     * Simulates a user input to test the program's all operations.
+     */
+    public void programExecution(){
+
+
+    }
+
 }
