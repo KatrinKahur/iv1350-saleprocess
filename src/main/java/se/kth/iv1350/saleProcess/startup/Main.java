@@ -1,6 +1,7 @@
 package se.kth.iv1350.saleProcess.startup;
 
 import se.kth.iv1350.saleProcess.controller.Controller;
+import se.kth.iv1350.saleProcess.integration.CatalogCreator;
 import se.kth.iv1350.saleProcess.view.View;
 
 /**
@@ -12,7 +13,8 @@ public class Main {
      * @param args The method does not take any parameters.
      */
     public static void main (String[] args){
-        Controller contr = new Controller();
+        CatalogCreator creator = new CatalogCreator();
+        Controller contr = new Controller(creator);
         View view = new View(contr);
 
 
