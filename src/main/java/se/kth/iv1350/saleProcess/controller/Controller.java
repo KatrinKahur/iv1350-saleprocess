@@ -12,4 +12,8 @@ public class Controller {
     private Printer printer;
     private CashRegister cashRegister;
 
+    public void startSale(){
+
+    }
+
 }
