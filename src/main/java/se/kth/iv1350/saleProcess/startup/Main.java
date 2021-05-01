@@ -17,6 +17,7 @@ public class Main {
         Controller contr = new Controller(creator);
         View view = new View(contr);
 
+        view.fakeProgramExecution();
 
     }
 }
