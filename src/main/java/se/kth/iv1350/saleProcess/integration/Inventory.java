@@ -12,6 +12,9 @@ public class Inventory {
 
     List <ItemDTO> itemList = new ArrayList<>();
 
+    /**
+     * Creates an instance of <code>Inventory</code>
+     */
     Inventory(){
         addItems();
     }
@@ -40,5 +43,21 @@ public class Inventory {
         itemList.add(new ItemDTO("sugar", new Amount(13), 15, new ItemIdentifier(18, 5)));
         itemList.add(new ItemDTO("pepper", new Amount(13), 15, new ItemIdentifier(19, 5)));
         itemList.add(new ItemDTO("baking powder", new Amount(22), 20, new ItemIdentifier(20, 5)));
+    }
+
+    /**
+     * This class searches the matching item in the <code>itemList</code>
+     * @param searchedIdentifier Item identifier of the specified item
+     * @return <code>ItemDTO</code> which barcode matches <code>searchedIdentifier</code>s barcode
+     */
+    public ItemDTO searchItem(ItemIdentifier searchedIdentifier){
+        int searchedItemBarcode = searchedIdentifier.getBarcode();
+
+        for (ItemDTO item : itemList ){
+            if(searchedItemBarcode == item.getBarcode())
+                return item;
+        }
+
+        return null;
     }
 }
