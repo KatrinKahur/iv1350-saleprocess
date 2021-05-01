@@ -8,10 +8,11 @@ import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
  */
 public class Item {
     private final Amount price;
-    private final int VAT;
+    private final double VAT;
     private final String name;
     private final int quantity;
     private final int barcode;
+    private Amount totalPrice;
 
     /**
      * Creates an instance of <code>Item</code>
@@ -24,5 +25,21 @@ public class Item {
         this.name = foundItem.getName();
         this.quantity = identifier.getQuantity();
         this.barcode = identifier.getBarcode();
+    }
+
+    /**
+     * This method calculates the total price of <code>Item</code> with the VAT rate included
+     * @return Total price of the item incl. VAT
+     */
+    private void calculateItemTotalPrice(){
+        totalPrice = (convertVATPercentageIntoAmount()).plus(price);
+    }
+
+    /**
+     * This method converts the VAT rate into <code>Amount</code>
+     * @return <code>Amount</code> of the items VAT rate regarding to its price
+     */
+    private Amount convertVATPercentageIntoAmount(){
+        return new Amount((VAT/100) * price.amount);
     }
 }
