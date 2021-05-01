@@ -11,6 +11,7 @@ public class Sale {
     private Receipt receipt;
     private LocalDateTime saleTime;
     private List<Item> listOfItems;
+    private Item recentlyScannedItem;
     private Amount runningTotal;
     private Amount totalPrice;
 
@@ -29,5 +30,13 @@ public class Sale {
      */
     private void setSaleTime(){
         saleTime = LocalDateTime.now();
+    }
+
+    /**
+     * This method gets the value of <code>runningTotal</code>
+     * @return The value of <code>runningTotal</code>
+     */
+    private Amount getRunningTotal(){
+        return new Amount(runningTotal.amount);
     }
 }
