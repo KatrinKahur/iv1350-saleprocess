@@ -4,7 +4,7 @@ package se.kth.iv1350.saleProcess.integration;
  * This class represents an item identifier of <code>Item</code>.
  */
 public class ItemIdentifier {
-    private String barCode;
+    private int barcode;
     private int quantity;
 
     /**
@@ -12,8 +12,8 @@ public class ItemIdentifier {
      * @param barCode The identification code of an <code>Item</code>
      * @param quantity The quantity of an <code>Item</code>
      */
-    public ItemIdentifier(String barCode, int quantity){
-        this.barCode = barCode;
+    public ItemIdentifier(int barCode, int quantity){
+        this.barcode = barCode;
         this.quantity = quantity;
     }
 
@@ -21,8 +21,8 @@ public class ItemIdentifier {
      * This class gets the value of <code>barCode</code>
      * @return The value of <code>barCode</code>
      */
-    public String getBarCode(){
-        return barCode;
+    public int getBarcode(){
+        return barcode;
     }
 
     /**
