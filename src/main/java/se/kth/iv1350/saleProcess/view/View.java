@@ -19,8 +19,9 @@ public class View {
     /**
      * Simulates a user input to test the program's all operations.
      */
-    public void programExecution(){
-
+    public void fakeProgramExecution(){
+        contr.startSale();
+        System.out.println("A new sale has been started.");
 
     }
 
