@@ -36,7 +36,16 @@ public class Sale {
      * This method gets the value of <code>runningTotal</code>
      * @return The value of <code>runningTotal</code>
      */
-    private Amount getRunningTotal(){
+    public Amount getRunningTotal(){
         return new Amount(runningTotal.amount);
     }
+
+    /**
+     * This method gets the recently scanned item.
+     * @return The value of <code>recentlyScannedItem</code>
+     */
+    public Item getRecentlyScannedItem(){
+        return recentlyScannedItem;
+    }
+
 }
