@@ -7,11 +7,11 @@ import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
  * This class represents a grocery item.
  */
 public class Item {
-    private Amount price;
-    private int VAT;
-    private String name;
-    private int quantity;
-    private String barcode;
+    private final Amount price;
+    private final int VAT;
+    private final String name;
+    private final int quantity;
+    private final int barcode;
 
     /**
      * Creates an instance of <code>Item</code>
@@ -23,6 +23,6 @@ public class Item {
         this.VAT = foundItem.getVAT();
         this.name = foundItem.getName();
         this.quantity = identifier.getQuantity();
-        this.barcode = identifier.getBarCode();
+        this.barcode = identifier.getBarcode();
     }
 }
