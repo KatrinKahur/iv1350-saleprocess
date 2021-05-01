@@ -4,13 +4,13 @@ package se.kth.iv1350.saleProcess.model;
  * This class represents a money amount.
  */
 public class Amount {
-    int amount;
+    double amount;
 
     /**
      * Creates an instance of <code>Amount</code>.
      * @param amount The represented amount
      */
-    public Amount(int amount){
+    public Amount(double amount){
         this.amount = amount;
     }
 
