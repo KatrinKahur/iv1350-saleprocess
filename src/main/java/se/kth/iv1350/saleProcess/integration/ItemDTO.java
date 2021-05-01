@@ -9,7 +9,7 @@ public class ItemDTO {
     private final String name;
     private final Amount price;
     private final int VAT;
-    private final String barcode;
+    private final int barcode;
 
     /**
      * This method creates an instance of <code>ItemDTO</code>
@@ -22,7 +22,7 @@ public class ItemDTO {
         this.name = name;
         this.price = price;
         this.VAT = VAT;
-        this.barcode = identifier.getBarCode();
+        this.barcode = identifier.getBarcode();
     }
 
     /**
@@ -53,7 +53,7 @@ public class ItemDTO {
      * This class gets the item barcode.
      * @return The value of <code>barcode</code>
      */
-    public String getBarcode() {
+    public int getBarcode() {
         return barcode;
     }
 
@@ -77,7 +77,7 @@ public class ItemDTO {
        if(VAT != comparedItem.getVAT())
            return false;
 
-       if(!barcode.equals(comparedItem.getBarcode()))
+       if(barcode != comparedItem.getBarcode())
            return false;
 
        return true;
