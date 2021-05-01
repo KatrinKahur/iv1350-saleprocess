@@ -49,4 +49,38 @@ public class ItemDTO {
         return VAT;
     }
 
+    /**
+     * This class gets the item barcode.
+     * @return The value of <code>barcode</code>
+     */
+    public String getBarcode() {
+        return barcode;
+    }
+
+    /**
+     * This class compares two instances of <code>ItemDTO</code> to determine whether they are equal.
+     * @param other The specified <code>ItemDTO</code> that is compared to this <code>ItemDTO</code>
+     * @return Returns <code>true</code> if <code>ItemDTO</code>s are equal, <code>false</code> if they are not.
+     */
+    public boolean equals(Object other){
+       if (other == null || !(other instanceof ItemDTO))
+           return false;
+
+       ItemDTO comparedItem = (ItemDTO) other;
+
+       if(!name.equals(comparedItem.getName()))
+           return false;
+
+       if(!price.equals(comparedItem.getPrice()))
+           return false;
+
+       if(VAT != comparedItem.getVAT())
+           return false;
+
+       if(!barcode.equals(comparedItem.getBarcode()))
+           return false;
+
+       return true;
+    }
+
 }
