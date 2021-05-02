@@ -1,7 +1,6 @@
 package se.kth.iv1350.saleProcess.model;
 
 import se.kth.iv1350.saleProcess.integration.ItemDTO;
-import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
 
 /**
  * This class represents a grocery item.
@@ -111,5 +110,31 @@ public class Item {
     @Override
     public String toString(){
         return "Item name: " + name + "\n" + "Item price: " + price + " SEK\n" + "VAT: " + VAT + " %\n";
+    }
+
+    /**
+     * This class compares two instances of <code>Item</code> to determine whether they are equal.
+     * @param other The specified <code>Item</code> that is compared to this <code>Item</code>
+     * @return Returns <code>true</code> if <code>Item</code>s are equal, <code>false</code> if they are not.
+     */
+    public boolean equals(Object other){
+        if (other == null || !(other instanceof Item))
+            return false;
+
+        Item comparedItem = (Item) other;
+
+        if(!name.equals(comparedItem.getName()))
+            return false;
+
+        if(!price.equals(comparedItem.getPrice()))
+            return false;
+
+        if(VAT != comparedItem.getVAT())
+            return false;
+
+        if(barcode != comparedItem.getBarcode())
+            return false;
+
+        return true;
     }
 }
