@@ -4,7 +4,11 @@ package se.kth.iv1350.saleProcess.model;
  * This class represents a money amount.
  */
 public class Amount {
-    double amount;
+    private final double amount;
+
+    public Amount(){
+        this(0);
+    }
 
     /**
      * Creates an instance of <code>Amount</code>.
@@ -30,7 +34,7 @@ public class Amount {
 
     /**
      * This method adds the specified <code>Amount</code> to this <code>Amount</code>
-     * @param amountToAdd The <code>Amount</code> that needs to be added to this <code>Amount</code>
+     * @param amountToAdd The <code>Amount</code> that needs to be added to this <code>amount</code>
      * @return The new <code>Amount</code> after adding the specified <code>Amount</code>
      */
     public Amount plus (Amount amountToAdd){
@@ -39,10 +43,27 @@ public class Amount {
 
     /**
      * This method subtracts the specified <code>Amount</code> from this <code>Amount</code>
-     * @param amountToSubtract The <code>Amount</code> that needs to be subtracted from this <code>Amount</code>
-     * @return The new <code>Amount</code> after subtracting the specified <code>Amount</code>
+     * @param amountToSubtract The <code>Amount</code> that needs to be subtracted from this <code>amount</code>
+     * @return The result of the subtraction
      */
     public Amount minus (Amount amountToSubtract){
         return new Amount(amount - amountToSubtract.amount);
+    }
+
+    /**
+     * This method multiplies this <code>Amount</code> by the specified <code>Amount</code>
+     * @param amountToMultiply <code>Amount</code> that this <code>amount</code> needs to be mupltiplied by
+     * @return The result of the multiplication
+     */
+    public Amount multiply(Amount amountToMultiply){
+        return new Amount(amount * amountToMultiply.amount);
+    }
+
+    /**
+     * This method converts <code>Amount</code> into <code>String</code>
+     * @return <code>String</code> representation of <code>Amount</code>
+     */
+    public String toString(){
+        return Double.toString(amount);
     }
 }
