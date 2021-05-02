@@ -10,29 +10,27 @@ public class Item {
     private final Amount price;
     private final double VAT;
     private final String name;
-    private final int quantity;
     private final int barcode;
-    private Amount totalPrice;
+    private int quantity;
+    private Amount priceWithVAT;
 
     /**
      * Creates an instance of <code>Item</code>
      * @param foundItem The <code>ItemDTO</code> fetched from <code>Inventory</code>
-     * @param identifier The <code>ItemIdentifier</code> entered by the cashier. It stores the item barcode and the quantity.
      */
-    Item (ItemDTO foundItem, ItemIdentifier identifier){
+    Item (ItemDTO foundItem){
         this.price = foundItem.getPrice();
         this.VAT = foundItem.getVAT();
         this.name = foundItem.getName();
-        this.quantity = identifier.getQuantity();
-        this.barcode = identifier.getBarcode();
+        this.barcode = foundItem.getBarcode();
+        this.quantity = 1;
     }
 
     /**
-     * This method calculates the total price of <code>Item</code> with the VAT rate included
-     * @return Total price of the item incl. VAT
+     * This method adds <code>VAT</code> to <code>price</code>
      */
-    private void calculateItemTotalPrice(){
-        totalPrice = (convertVATPercentageIntoAmount()).plus(price);
+    void calculatePriceWithVAT(){
+        priceWithVAT = (convertVATPercentageIntoAmount()).plus(price);
     }
 
     /**
@@ -40,6 +38,78 @@ public class Item {
      * @return <code>Amount</code> of the items VAT rate regarding to its price
      */
     private Amount convertVATPercentageIntoAmount(){
-        return new Amount((VAT/100) * price.amount);
+        return new Amount(VAT/100).multiply(price);
+    }
+
+    /**
+     * This method gets the value of <code>priceWithVAT</code>
+     * @return The value of <code>priceWithVAT</code>
+     */
+    public Amount getPriceWithVAT(){
+        return priceWithVAT;
+    }
+
+    /**
+     * This method updates increases <code>quantity</code> by 1
+     */
+    void increaseQuantity(){
+        quantity++;
+    }
+
+    /**
+     * This method sets the item quantity
+     * @param quantity Quantity of the item
+     */
+    void setQuantity(int quantity){
+        this.quantity = quantity;
+    }
+
+    /**
+     * This method gets the value of <code>quantity</code>
+     * @return The value of <code>quantity</code>
+     */
+    int getQuantity(){
+        return quantity;
+    }
+
+    /**
+     * This method gets the value of <code>barcode</code>
+     * @return The value of <code>barcode</code>
+     */
+    int getBarcode(){
+        return barcode;
+    }
+
+    /**
+     * This method gets the value of <code>VAT</code>
+     * @return The value of <code>VAT</code>
+     */
+    double getVAT(){
+        return VAT;
+    }
+
+    /**
+     * This method gets the value of <code>price</code>
+     * @return The value of <code>price</code>
+     */
+    Amount getPrice(){
+        return price;
+    }
+
+    /**
+     * This method gets the name of the item.
+     * @return The name of the item
+     */
+    String getName(){
+        return name;
+    }
+
+    /**
+     * This method is a <code>String</code> representation of Item name, price and VAT
+     * @return <code>String</code> with item name, price and VAT
+     */
+    @Override
+    public String toString(){
+        return "Item name: " + name + "\n" + "Item price: " + price + " SEK\n" + "VAT: " + VAT + " %\n";
     }
 }
