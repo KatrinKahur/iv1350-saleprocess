@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AmountTest {
-    int amount;
+    double amount;
     Amount amountInstance;
     Amount anotherInstance;
 
@@ -26,7 +26,7 @@ class AmountTest {
 
     @Test
     void testEquals() {
-        int amountToCompare = 5;
+        double amountToCompare = 5;
         anotherInstance = new Amount(amountToCompare);
         boolean expectedResult = true;
         boolean result = amountInstance.equals(anotherInstance);
@@ -35,7 +35,7 @@ class AmountTest {
 
     @Test
     void testPlus() {
-        int amountToAdd = 9;
+        double amountToAdd = 9;
         anotherInstance = new Amount(amountToAdd);
         Amount expectedResult = new Amount(amount + amountToAdd);
         Amount result = amountInstance.plus(anotherInstance);
@@ -44,10 +44,19 @@ class AmountTest {
 
     @Test
     void testMinus() {
-        int amountToSubtract = 4;
+        double amountToSubtract = 4;
         anotherInstance = new Amount(amountToSubtract);
         Amount expectedResult = new Amount(amount - amountToSubtract);
         Amount result = amountInstance.minus(anotherInstance);
         assertEquals(expectedResult,result,"The result of the subtraction is not correct.");
+    }
+
+    @Test
+    void testMultiplication(){
+        double amountToMultiplyBy = 4;
+        anotherInstance = new Amount(amountToMultiplyBy);
+        Amount expectedResult = new Amount(amount * amountToMultiplyBy);
+        Amount result = amountInstance.multiply(anotherInstance);
+        assertEquals(expectedResult, result,"The result of the multiplication is not correct.");
     }
 }
