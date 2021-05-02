@@ -2,6 +2,7 @@ package se.kth.iv1350.saleProcess.view;
 
 import se.kth.iv1350.saleProcess.controller.Controller;
 import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
+import se.kth.iv1350.saleProcess.model.Amount;
 
 /**
  * This class is a placeholder for the entire view.
@@ -27,6 +28,9 @@ public class View {
         System.out.println("A new item has been scanned.");
         String saleInfo = contr.registerItem(enteredIdentifier);
         System.out.println(saleInfo);
+        System.out.println("The program ends the sale.");
+        String totalPrice = contr.endSale();
+        System.out.println("The total price of the sale is: " + totalPrice + " SEK");
 
     }
 
