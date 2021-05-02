@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SaleTest {
 
-    private final ItemDTO itemYoghurt = new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3));
-    private final ItemDTO itemIceCream = new ItemDTO("Strawberry ice cream", new Amount(39), 20, new ItemIdentifier(14));
+    private final ItemDTO itemDTOYoghurt = new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3));
+    private final ItemDTO itemDTOIceCream = new ItemDTO("Strawberry ice cream", new Amount(39), 20, new ItemIdentifier(14));
     private Sale saleInstance;
     private Item itemInstanceYoghurt;
     private Item itemInstanceIceCream;
@@ -20,8 +20,8 @@ class SaleTest {
     @BeforeEach
     void setUp() {
         saleInstance = new Sale();
-        itemInstanceYoghurt = new Item(itemYoghurt);
-        itemInstanceIceCream = new Item(itemIceCream);
+        itemInstanceYoghurt = new Item(itemDTOYoghurt);
+        itemInstanceIceCream = new Item(itemDTOIceCream);
 
     }
 
@@ -41,7 +41,7 @@ class SaleTest {
 
     @Test
     void testGetRecentlyScannedItem() {
-        saleInstance.registerItem(itemYoghurt);
+        saleInstance.registerItem(itemDTOYoghurt);
         Item expResult = itemInstanceYoghurt;
         Item result = saleInstance.getRecentlyScannedItem();
         assertEquals(expResult, result, "The recently registered item is not correct.");
@@ -49,7 +49,7 @@ class SaleTest {
 
     @Test
     void runningTotalUpdatedAfterRegisteringANewItem() {
-        saleInstance.registerItem(itemYoghurt);
+        saleInstance.registerItem(itemDTOYoghurt);
         itemInstanceYoghurt.calculatePriceWithVAT();
         Amount expRunningTotal = itemInstanceYoghurt.getPriceWithVAT();
         Amount runningTotal = saleInstance.getRunningTotal();
@@ -57,9 +57,9 @@ class SaleTest {
     }
 
     @Test
-    void testItemAlreadyExistsInTheSale() {
-        saleInstance.registerItem(itemYoghurt);
-        saleInstance.registerItem(itemYoghurt);
+    void testUpdatingQuantityIfItemAlreadyExistsInTheSale() {
+        saleInstance.registerItem(itemDTOYoghurt);
+        saleInstance.registerItem(itemDTOYoghurt);
         int expItemQuantityAfterRegisteringTheItem = 2;
         int itemQuantityAfterRegisteringTheItem = saleInstance.getRecentlyScannedItem().getQuantity();
         assertEquals(expItemQuantityAfterRegisteringTheItem, itemQuantityAfterRegisteringTheItem, "Item quantity is not updated correctly.");
@@ -69,7 +69,7 @@ class SaleTest {
     void testTheReturnedSaleInformationAfterRegisteringANewItem(){
         itemInstanceIceCream.calculatePriceWithVAT();
         SaleDTO expResult = new SaleDTO(itemInstanceIceCream.getPriceWithVAT(), itemInstanceIceCream);
-        SaleDTO result = saleInstance.registerItem(itemIceCream);
+        SaleDTO result = saleInstance.registerItem(itemDTOIceCream);
         assertEquals(expResult, result, "The returned SaleDTO is not correct.");
     }
 
