@@ -1,6 +1,7 @@
 package se.kth.iv1350.saleProcess.controller;
 
 import se.kth.iv1350.saleProcess.integration.*;
+import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.CashRegister;
 import se.kth.iv1350.saleProcess.model.DiscountHandeler;
 import se.kth.iv1350.saleProcess.model.Sale;
@@ -53,4 +54,12 @@ public class Controller {
         return saleInformation.toString();
     }
 
+    /**
+     * This method makes the correct system calls to the model to end the sale.
+     * @return The total price of the sale.
+     */
+    public String endSale(){
+        Amount totalPrice = currentSale.endSale();
+        return totalPrice.toString();
+    }
 }
