@@ -61,7 +61,7 @@ class ItemDTOTest {
     }
 
     @Test
-    void testItemIdentifiersQuantityIgnoredWhenComparingTheItems(){
+    void testItemIdentifiersQuantityIgnoredWhileComparingTheItems(){
         ItemDTO otherInstance = new ItemDTO("milk", new Amount(25), 15, new ItemIdentifier(1,2));
         boolean expResult = true;
         boolean result = instance.equals(otherInstance);
