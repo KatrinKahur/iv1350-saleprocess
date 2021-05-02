@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SaleTest {
 
-    private ItemDTO itemYoghurt = new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3));
-    private ItemDTO itemIceCream = new ItemDTO("Strawberry ice cream", new Amount(39), 20, new ItemIdentifier(14));
+    private final ItemDTO itemYoghurt = new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3));
+    private final ItemDTO itemIceCream = new ItemDTO("Strawberry ice cream", new Amount(39), 20, new ItemIdentifier(14));
     private Sale saleInstance;
     private Item itemInstanceYoghurt;
     private Item itemInstanceIceCream;
