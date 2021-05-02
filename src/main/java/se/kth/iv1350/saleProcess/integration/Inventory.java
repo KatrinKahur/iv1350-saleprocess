@@ -23,26 +23,26 @@ public class Inventory {
      * This class adds items to <code>itemList</code>
      */
     private void addItems(){
-        itemList.add(new ItemDTO("milk", new Amount(25), 15, new ItemIdentifier(1, 5)));
-        itemList.add(new ItemDTO("pasta", new Amount(14), 15, new ItemIdentifier(2, 5)));
-        itemList.add(new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3, 5)));
-        itemList.add(new ItemDTO("chicken filet", new Amount(48), 20, new ItemIdentifier(4, 5)));
-        itemList.add(new ItemDTO("meatballs", new Amount(42), 15, new ItemIdentifier(5, 5)));
-        itemList.add(new ItemDTO("fruit", new Amount(8), 10, new ItemIdentifier(6, 10)));
-        itemList.add(new ItemDTO("cornflakes", new Amount(17), 10, new ItemIdentifier(7, 5)));
-        itemList.add(new ItemDTO("pizza", new Amount(100), 15, new ItemIdentifier(8, 5)));
-        itemList.add(new ItemDTO("vegetable", new Amount(10), 15, new ItemIdentifier(9, 10)));
-        itemList.add(new ItemDTO("juice", new Amount(19), 15, new ItemIdentifier(10, 5)));
-        itemList.add(new ItemDTO("soda", new Amount(12), 15, new ItemIdentifier(11, 5)));
-        itemList.add(new ItemDTO("chocolate bar", new Amount(15), 10, new ItemIdentifier(12, 5)));
-        itemList.add(new ItemDTO("toilet paper", new Amount(31), 10, new ItemIdentifier(13, 5)));
-        itemList.add(new ItemDTO("ice cream", new Amount(39), 20, new ItemIdentifier(14, 5)));
-        itemList.add(new ItemDTO("shampoo", new Amount(26), 15, new ItemIdentifier(15, 5)));
-        itemList.add(new ItemDTO("rice", new Amount(19), 20, new ItemIdentifier(16, 5)));
-        itemList.add(new ItemDTO("salt", new Amount(11), 15, new ItemIdentifier(17, 5)));
-        itemList.add(new ItemDTO("sugar", new Amount(13), 15, new ItemIdentifier(18, 5)));
-        itemList.add(new ItemDTO("pepper", new Amount(13), 15, new ItemIdentifier(19, 5)));
-        itemList.add(new ItemDTO("baking powder", new Amount(22), 20, new ItemIdentifier(20, 5)));
+        itemList.add(new ItemDTO("Milk", new Amount(25), 15, new ItemIdentifier(1, 20)));
+        itemList.add(new ItemDTO("Pasta", new Amount(14), 15, new ItemIdentifier(2, 20)));
+        itemList.add(new ItemDTO("Yoghurt", new Amount(27), 20, new ItemIdentifier(3, 20)));
+        itemList.add(new ItemDTO("Chicken filet", new Amount(48), 20, new ItemIdentifier(4, 20)));
+        itemList.add(new ItemDTO("Meatballs", new Amount(42), 15, new ItemIdentifier(5, 20)));
+        itemList.add(new ItemDTO("Orange", new Amount(8), 10, new ItemIdentifier(6, 20)));
+        itemList.add(new ItemDTO("Cornflakes", new Amount(17), 10, new ItemIdentifier(7, 20)));
+        itemList.add(new ItemDTO("Pizza Hawaii", new Amount(100), 15, new ItemIdentifier(8, 20)));
+        itemList.add(new ItemDTO("Tomato", new Amount(10), 15, new ItemIdentifier(9, 20)));
+        itemList.add(new ItemDTO("Orange juice", new Amount(19), 15, new ItemIdentifier(10, 20)));
+        itemList.add(new ItemDTO("Soda", new Amount(12), 15, new ItemIdentifier(11, 20)));
+        itemList.add(new ItemDTO("Chocolate bar", new Amount(15), 10, new ItemIdentifier(12, 20)));
+        itemList.add(new ItemDTO("Toilet paper", new Amount(31), 10, new ItemIdentifier(13, 20)));
+        itemList.add(new ItemDTO("Strawberry ice cream", new Amount(39), 20, new ItemIdentifier(14, 20)));
+        itemList.add(new ItemDTO("Shampoo", new Amount(26), 15, new ItemIdentifier(15, 20)));
+        itemList.add(new ItemDTO("Basmati rice", new Amount(19), 20, new ItemIdentifier(16, 20)));
+        itemList.add(new ItemDTO("Salt", new Amount(11), 15, new ItemIdentifier(17, 20)));
+        itemList.add(new ItemDTO("Sugar", new Amount(13), 15, new ItemIdentifier(18, 20)));
+        itemList.add(new ItemDTO("Pepper", new Amount(13), 15, new ItemIdentifier(19, 20)));
+        itemList.add(new ItemDTO("Baking powder", new Amount(22), 20, new ItemIdentifier(20, 20)));
     }
 
     /**
