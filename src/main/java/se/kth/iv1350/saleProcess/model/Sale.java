@@ -113,4 +113,29 @@ public class Sale {
     public SaleDTO createSaleInformation(){
         return new SaleDTO(this);
     }
+
+    /**
+     * This method calculates the total price of the sale.
+     */
+    private void calculateTotalPrice(){
+        totalPrice = new Amount(runningTotal.getAmount());
+    }
+
+    /**
+     * This method gets the total price of the sale.
+     * @return The value of <code>totalPrice</code>
+     */
+    public Amount getTotalPrice(){
+        return totalPrice;
+    }
+
+    /**
+     * This method ends the sale by calculating the total price
+     * @return The total price of the sale
+     */
+    public Amount endSale(){
+        calculateTotalPrice();
+        return getTotalPrice();
+    }
+
 }
