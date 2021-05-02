@@ -42,4 +42,15 @@ public class Controller {
         discHandeler = new DiscountHandeler(discCatalog);
     }
 
+    /**
+     * This method registers a newly scanned item.
+     * @param identifier Used to get the barcode of the newly scanned item
+     * @return <code>String</code>> including information about item name, price and running total
+     */
+    public String registerItem(ItemIdentifier identifier){
+        ItemDTO foundItem = inventory.searchItem(identifier);
+        SaleDTO saleInformation = currentSale.registerItem(foundItem);
+        return saleInformation.toString();
+    }
+
 }
