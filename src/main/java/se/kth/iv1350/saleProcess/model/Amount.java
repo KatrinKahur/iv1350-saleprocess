@@ -66,4 +66,8 @@ public class Amount {
     public String toString(){
         return Double.toString(amount);
     }
+
+    double getAmount(){
+        return amount;
+    }
 }
