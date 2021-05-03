@@ -8,7 +8,6 @@ public class CatalogCreator {
     private SaleCatalog saleCatalog = new SaleCatalog();
     private CustomerCatalog customerCatalog = new CustomerCatalog();
     private Accounting accounting = new Accounting();
-    private DiscountCatalog  discCatalog = new DiscountCatalog();
 
     public Inventory getInventory(){
         return inventory;
@@ -26,7 +25,4 @@ public class CatalogCreator {
         return accounting;
     }
 
-    public DiscountCatalog getDiscountCatalog(){
-        return discCatalog;
-    }
 }
