@@ -123,18 +123,6 @@ public class Item {
 
         Item comparedItem = (Item) other;
 
-        if(!name.equals(comparedItem.getName()))
-            return false;
-
-        if(!price.equals(comparedItem.getPrice()))
-            return false;
-
-        if(VAT != comparedItem.getVAT())
-            return false;
-
-        if(barcode != comparedItem.getBarcode())
-            return false;
-
-        return true;
+        return barcode == comparedItem.getBarcode();
     }
 }
