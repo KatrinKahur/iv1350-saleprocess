@@ -26,4 +26,27 @@ public class CustomerDTO {
         this.membershipLevel = membershipLevel;
     }
 
+    /**
+     * This method gets the value of <code>customerID</code>
+     * @return The value of <code>customerID</code>
+     */
+    int getCustomerID(){
+        return customerID;
+    }
+
+    /**
+     * This method compares two instances of <code>CustomerDTO</code> to determine whether they are equal.
+     * @param object The specified <code>CustomerDTO</code> that is compared with this <code>CustomerDTO</code>
+     * @return The method returns <code>true</code> if <code>customerID</code>s of both instances are equal, <code>false</code>
+     * if they are not.
+     */
+    public boolean equals(Object object){
+        if (object == null)
+            return false;
+        if (!(object instanceof CustomerDTO))
+            return false;
+        CustomerDTO customerToCompare = (CustomerDTO) object;
+
+        return customerID == customerToCompare.getCustomerID();
+    }
 }
