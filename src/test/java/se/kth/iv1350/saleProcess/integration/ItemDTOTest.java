@@ -21,27 +21,11 @@ class ItemDTOTest {
     }
 
     @Test
-    void testItemsAllParametersEqual() {
+    void testItemsEqual() {
         ItemDTO otherInstance = new ItemDTO("milk", new Amount(25), 15, new ItemIdentifier(1,1));
         boolean expResult = true;
         boolean result = instance.equals(otherInstance);
         assertEquals(expResult, result,"Items are not equal.");
-    }
-
-    @Test
-    void testItemsPriceNotEqual(){
-        ItemDTO otherInstance = new ItemDTO("milk", new Amount(24), 15, new ItemIdentifier(1,1));
-        boolean expResult = false;
-        boolean result = instance.equals(otherInstance);
-        assertEquals(expResult, result,"Items prices are equal.");
-    }
-
-    @Test
-    void testItemsNameNotEqual(){
-        ItemDTO otherInstance = new ItemDTO("oatmilk", new Amount(25), 15, new ItemIdentifier(1,1));
-        boolean expResult = false;
-        boolean result = instance.equals(otherInstance);
-        assertEquals(expResult, result,"Items names are equal.");
     }
 
     @Test
@@ -50,14 +34,6 @@ class ItemDTOTest {
         boolean expResult = false;
         boolean result = instance.equals(otherInstance);
         assertEquals(expResult, result,"Items barcodes are equal.");
-    }
-
-    @Test
-    void testItemsVATNotEqual(){
-        ItemDTO otherInstance = new ItemDTO("milk", new Amount(25), 16, new ItemIdentifier(1,1));
-        boolean expResult = false;
-        boolean result = instance.equals(otherInstance);
-        assertEquals(expResult, result,"Items VAT rates are equal.");
     }
 
     @Test
