@@ -3,7 +3,7 @@ package se.kth.iv1350.saleProcess.controller;
 import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.CashRegister;
-import se.kth.iv1350.saleProcess.model.DiscountHandeler;
+import se.kth.iv1350.saleProcess.model.DiscountCalculator;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 /**
@@ -16,8 +16,7 @@ public class Controller {
     private SaleCatalog saleCatalog;
     private CustomerCatalog customerCatalog;
     private Accounting accounting;
-    private DiscountCatalog discCatalog;
-    private DiscountHandeler discHandeler;
+    private DiscountCalculator discCalculator;
     private Sale currentSale;
 
     /**
@@ -30,7 +29,6 @@ public class Controller {
         this.saleCatalog = creator.getSaleCatalog();
         this.customerCatalog = creator.getCustomerCatalog();
         this.accounting = creator.getAccounting();
-        this.discCatalog = creator.getDiscountCatalog();
         this.printer = new Printer();
         this.cashRegister = new CashRegister();
     }
@@ -40,7 +38,7 @@ public class Controller {
      */
     public void startSale(){
         currentSale = new Sale();
-        discHandeler = new DiscountHandeler(discCatalog);
+        discCalculator = new DiscountCalculator();
     }
 
     /**
@@ -58,8 +56,24 @@ public class Controller {
      * This method makes the correct system calls to the model to end the sale.
      * @return The total price of the sale.
      */
-    public String endSale(){
+    public Amount endSale(){
         Amount totalPrice = currentSale.endSale();
-        return totalPrice.toString();
+        return totalPrice;
     }
+
+    /**
+     * This method handles the discount request by making the correct system calls to find a matching discount and update the total price
+     * @param searchedCustomer <code>CustomerDTO</code> that is used to get the membership level
+     * @return The total price of the sale after applying the discounts
+     */
+    public Amount handleDiscountRequest(CustomerDTO searchedCustomer){
+        CustomerDTO foundCustomer = customerCatalog.searchCustomer(searchedCustomer);
+        Amount calculatedDiscount = discCalculator.calculateDiscount(currentSale, foundCustomer);
+        currentSale.applyDiscount(calculatedDiscount);
+        return currentSale.getTotalPrice();
+    }
+
+
+
+
 }
