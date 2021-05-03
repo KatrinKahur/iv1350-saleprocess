@@ -35,6 +35,14 @@ public class CustomerDTO {
     }
 
     /**
+     * This method gets the customers membership level.
+     * @return  The value of <code>membershipLevel</code>
+     */
+    public String getMembershipLevel(){
+        return membershipLevel;
+    }
+
+    /**
      * This method compares two instances of <code>CustomerDTO</code> to determine whether they are equal.
      * @param object The specified <code>CustomerDTO</code> that is compared with this <code>CustomerDTO</code>
      * @return The method returns <code>true</code> if <code>customerID</code>s of both instances are equal, <code>false</code>
