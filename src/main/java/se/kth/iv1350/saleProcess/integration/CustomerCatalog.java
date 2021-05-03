@@ -44,4 +44,19 @@ public class CustomerCatalog {
         customerList.add(new CustomerDTO(139, "gold"));
         customerList.add(new CustomerDTO(140, "gold"));
     }
+
+    /**
+     * This method searches the matching <code>CustomerDTO</code> in <code>customerList</code>
+     * @param searchedCustomer The specified <code>CustomerDTO</code> that is used to find the matching <code>CustomerDTO</code>
+     * in the customer list.
+     * @return <code>CustomerDTO</code> that has the same customer identification as <code>searchedCustomer</code>, <code>null</code>
+     * if no such <code>CustomerDTO</code> is found.
+     */
+    public CustomerDTO searchCustomer(CustomerDTO searchedCustomer){
+        for (CustomerDTO customer : customerList){
+            if (customer.equals(searchedCustomer))
+                return customer;
+        }
+        return null;
+    }
 }
