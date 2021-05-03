@@ -18,7 +18,8 @@ public class CustomerDTO {
     /**
      * Creates an instance of <code>CustomerID</code>
      * @param customerID Customer identification number
-     * @param membershipLevel Customers membership level
+     * @param membershipLevel Customers membership level. There are 3 possible membership levels:
+     * bronze, silver and gold.
      */
     CustomerDTO(int customerID, String membershipLevel){
         this.customerID = customerID;
