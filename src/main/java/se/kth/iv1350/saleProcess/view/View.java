@@ -1,6 +1,7 @@
 package se.kth.iv1350.saleProcess.view;
 
 import se.kth.iv1350.saleProcess.controller.Controller;
+import se.kth.iv1350.saleProcess.integration.CustomerDTO;
 import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
 import se.kth.iv1350.saleProcess.model.Amount;
 
@@ -29,8 +30,10 @@ public class View {
         String saleInfo = contr.registerItem(enteredIdentifier);
         System.out.println(saleInfo);
         System.out.println("The program ends the sale.");
-        String totalPrice = contr.endSale();
-        System.out.println("The total price of the sale is: " + totalPrice + " SEK");
+        Amount totalPrice = contr.endSale();
+        System.out.println("The total price of the sale is: " + totalPrice.toString() + " SEK");
+        CustomerDTO searchedCustomer = new CustomerDTO(130);
+        totalPrice = contr.handleDiscountRequest(searchedCustomer);
 
     }
 
