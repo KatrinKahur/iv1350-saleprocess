@@ -73,6 +73,10 @@ public class Controller {
         return currentSale.getTotalPrice();
     }
 
+    public String pay(Amount cashPayment){
+        Amount change = cashRegister.addPayment(cashPayment, currentSale);
+       return currentSale.registerPayment(cashPayment, change);
+    }
 
 
 

@@ -155,11 +155,16 @@ public class Sale {
     }
 
     /**
-     * This method adds the calculated discount to <code>totalPrice</code>
+     * This method subtracts the calculated discount to <code>totalPrice</code>
      * @param discount The specified discount that needs to be applied
      */
     public void applyDiscount(Amount discount){
-        totalPrice = totalPrice.plus(discount);
+        totalPrice = totalPrice.minus(discount);
+    }
+
+    public String registerPayment(Amount cashPayment, Amount change){
+        receipt.sendSaleToReceipt(this, cashPayment, change);
+        return receipt.toString();
     }
 
 }
