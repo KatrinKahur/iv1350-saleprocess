@@ -130,12 +130,36 @@ public class Sale {
     }
 
     /**
+     * This method gets the number of items in <code>listOfItems</code>
+     * @return The number of items in <code>listOfItems</code>
+     */
+    public int getTheNumberOfBoughtItems(){
+        return listOfItems.size();
+    }
+
+    /**
+     * This method gets the items in <code>listOfItems</code>
+     * @return It returns the value of <code>listOfItems</code>
+     */
+    public List<Item> getListOfItems(){
+        return listOfItems;
+    }
+
+    /**
      * This method ends the sale by calculating the total price
      * @return The total price of the sale
      */
     public Amount endSale(){
         calculateTotalPrice();
         return getTotalPrice();
+    }
+
+    /**
+     * This method adds the calculated discount to <code>totalPrice</code>
+     * @param discount The specified discount that needs to be applied
+     */
+    public void applyDiscount(Amount discount){
+        totalPrice = totalPrice.plus(discount);
     }
 
 }
