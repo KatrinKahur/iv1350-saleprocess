@@ -6,21 +6,28 @@ package se.kth.iv1350.saleProcess.integration;
 public class CatalogCreator {
     private Inventory inventory = new Inventory();
     private SaleCatalog saleCatalog = new SaleCatalog();
-    private CustomerCatalog customerCatalog = new CustomerCatalog();
     private Accounting accounting = new Accounting();
 
+    /**
+     * This method gets the value of <code>inventory</code>
+     * @return The value of <code>inventory</code>
+     */
     public Inventory getInventory(){
         return inventory;
     }
 
+    /**
+     * This method gets the value of <code>saleCatalog</code>
+     * @return The value of <code>saleCatalog</code>
+     */
     public SaleCatalog getSaleCatalog(){
         return saleCatalog;
     }
 
-    public CustomerCatalog getCustomerCatalog(){
-        return customerCatalog;
-    }
-
+    /**
+     * This method gets the value of <code>accounting</code>
+     * @return The value of <code>accounting</code>
+     */
     public Accounting getAccounting(){
         return accounting;
     }

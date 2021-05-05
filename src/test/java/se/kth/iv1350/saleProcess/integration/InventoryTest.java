@@ -23,8 +23,8 @@ class InventoryTest {
 
     @Test
     void testSearchedItemIsFound() {
-        ItemIdentifier searchedIdentifier = new ItemIdentifier(5, 1);
-        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 15, new ItemIdentifier(5, 1));
+        ItemIdentifier searchedIdentifier = new ItemIdentifier(5);
+        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 15, new ItemIdentifier(5));
         ItemDTO expResult = searchedItem;
         ItemDTO result = inventory.searchItem(searchedIdentifier);
         assertEquals(expResult, result, "Wrong item found.");

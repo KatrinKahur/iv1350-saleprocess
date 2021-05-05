@@ -2,8 +2,10 @@ package se.kth.iv1350.saleProcess.integration;
 
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.Item;
-import se.kth.iv1350.saleProcess.model.Sale;
 
+/**
+ * This class gathers information about the current sale that is returned to View.
+ */
 public class SaleDTO {
 
     private final Amount runningTotal;
@@ -11,16 +13,7 @@ public class SaleDTO {
 
     /**
      * Creates an instance of <code>SaleDTO</code>
-     * @param currentSale Used to get <code>runningTotal</code> of <code>currentSale</code> and the recently scanned <code>Item</code>
-     */
-    public SaleDTO(Sale currentSale){
-        runningTotal = currentSale.getRunningTotal();
-        recentlyScannedItem = currentSale.getRecentlyScannedItem();
-    }
-
-    /**
-     * Creates an instance of <code>SaleDTO</code>
-     * @param runningTotal The running total of a sale
+     * @param runningTotal The running total of the current sale
      * @param recentlyScannedItem The most recently scanned item
      */
     public SaleDTO(Amount runningTotal, Item recentlyScannedItem){
@@ -29,36 +22,17 @@ public class SaleDTO {
     }
 
     /**
-     * This method gets the value of <code>runningTotal</code>
-     * @return The value of <code>runningTotal</code>
+     * This method creates a formatted string with the information about running total and recently scanned item.
+     * @return Formatted string with the information about running total and recently scanned item.
      */
-    private Amount getRunningTotal(){
-        return runningTotal;
-    }
-
-    /**
-     * This method gets the value of the most recently scanned item
-     * @return The value of <code>recentlyScannedItem</code>
-     */
-    private Item getRecentlyScannedItem(){
-        return recentlyScannedItem;
-    }
-
     @Override
     public String toString(){
-        String itemDescription = recentlyScannedItem.toString();
-        String runningTot = runningTotal.toString();
-        return itemDescription + "Running total: " + runningTot + " SEK\n";
+        StringBuilder saleDTOToString = new StringBuilder();
+        saleDTOToString.append(recentlyScannedItem);
+        saleDTOToString.append("Running total: ");
+        saleDTOToString.append(runningTotal);
+        saleDTOToString.append(" SEK\n");
+        return saleDTOToString.toString();
     }
 
-    public boolean equals(Object other){
-        if(other == null || !(other instanceof SaleDTO))
-            return false;
-        SaleDTO objToCompare = (SaleDTO) other;
-        if(!runningTotal.equals(objToCompare.getRunningTotal()))
-            return false;
-        if(!recentlyScannedItem.equals(objToCompare.getRecentlyScannedItem()))
-            return false;
-        return true;
-    }
 }

@@ -1,6 +1,7 @@
 package se.kth.iv1350.saleProcess.model;
 
 import se.kth.iv1350.saleProcess.integration.ItemDTO;
+import se.kth.iv1350.saleProcess.integration.Printer;
 import se.kth.iv1350.saleProcess.integration.SaleDTO;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,8 @@ public class Sale {
     private Item recentlyScannedItem;
     private Amount runningTotal;
     private Amount totalPrice;
+    private Amount cashPayment;
+    private Amount change;
 
     /**
      * Creates an instance of <code>Sale</code>, sets the <code>saleTime</code>, creates a new <code>Receipt</code> and
@@ -24,20 +27,24 @@ public class Sale {
       */
     public Sale(){
         setSaleTime();
-        receipt = new Receipt(saleTime);
+        receipt = new Receipt();
         listOfItems = new ArrayList<>();
         runningTotal = new Amount();
     }
 
-    /**
-     * Sets the <code>saleTime</code>.
-     */
+
     private void setSaleTime(){
         saleTime = LocalDateTime.now();
     }
+
     /**
-     * This method updates the running total.
+     * This method gets the time of the sale.
+     * @return The time of the sale
      */
+    LocalDateTime getSaleTime(){
+        return saleTime;
+    }
+
     private void updateRunningTotal(){
         runningTotal = runningTotal.plus(recentlyScannedItem.getPriceWithVAT());
     }
@@ -46,7 +53,7 @@ public class Sale {
      * This method gets the value of <code>runningTotal</code>
      * @return The value of <code>runningTotal</code>
      */
-    public Amount getRunningTotal(){
+     Amount getRunningTotal(){
         return runningTotal;
     }
 
@@ -75,13 +82,7 @@ public class Sale {
         return createSaleInformation();
     }
 
-    /**
-     * This method iterates the <code>listOfItems</code> to check if an <code>Item</code> with similar <code>barcode</code> already
-     * exists in <code>Sale</code>
-     * @param foundItem Used to get the scanned items barcode
-     * @return If <code>Item</code> with similar barcode already exists in <code>Sale</code>, the value of
-     * <code>Item</code> is returned, or else the program returns <code>null</code>
-     */
+
     private Item checkForExistingItem(ItemDTO foundItem){
         for (Item item : listOfItems){
             if (foundItem.getBarcode() == item.getBarcode())
@@ -90,33 +91,21 @@ public class Sale {
         return null;
     }
 
-    /**
-     * This method creates a new instance of <code>Item</code> and assigns <code>recentlyScannedItem</code>
-     * refer to it.
-     * @param newItem The fetched item from the inventory system
-     */
+
     private void setRecentlyScannedItem(Item newItem){
         recentlyScannedItem = newItem;
     }
 
-    /**
-     * This method adds the most recently scanned item to the item list.
-     */
+
     private void addRecentlyScannedItemToTheItemList(){
         listOfItems.add(recentlyScannedItem);
     }
 
-    /**
-     * This method creates a new instance of <code>SaleDTO</code> for the view.
-     * @return <code>SaleDTO</code> that includes item description, VAT and running total
-     */
-    public SaleDTO createSaleInformation(){
-        return new SaleDTO(this);
+
+    private SaleDTO createSaleInformation(){
+        return new SaleDTO(runningTotal, recentlyScannedItem);
     }
 
-    /**
-     * This method calculates the total price of the sale.
-     */
     private void calculateTotalPrice(){
         totalPrice = new Amount(runningTotal.getAmount());
     }
@@ -127,14 +116,6 @@ public class Sale {
      */
     public Amount getTotalPrice(){
         return totalPrice;
-    }
-
-    /**
-     * This method gets the number of items in <code>listOfItems</code>
-     * @return The number of items in <code>listOfItems</code>
-     */
-    public int getTheNumberOfBoughtItems(){
-        return listOfItems.size();
     }
 
     /**
@@ -154,17 +135,46 @@ public class Sale {
         return getTotalPrice();
     }
 
-    /**
-     * This method subtracts the calculated discount to <code>totalPrice</code>
-     * @param discount The specified discount that needs to be applied
-     */
-    public void applyDiscount(Amount discount){
-        totalPrice = totalPrice.minus(discount);
+
+    public void registerPayment(CashRegister cashRegister, Amount cashPayment){
+        setCashPayment(cashPayment);
+        Amount change = cashRegister.addPayment(this);
+        setChange(change);
+        receipt.sendSaleToReceipt(this);
     }
 
-    public String registerPayment(Amount cashPayment, Amount change){
-        receipt.sendSaleToReceipt(this, cashPayment, change);
-        return receipt.toString();
+    /**
+     * This method calls the printer to print out the receipt
+     * @param printer The object representing the printer
+     * @return String representation of the receipt
+     */
+    public String printReceipt(Printer printer){
+        return printer.printReceipt(receipt);
     }
+
+    /**
+     * This method gets the value of <code>cashPayment</code>
+     * @return The value of <code>cashPayment</code>
+     */
+    Amount getCashPayment(){
+        return cashPayment;
+    }
+
+    /**
+     * This method gets the value of <code>change</code>
+     * @return The value of <code>change</code>
+     */
+    Amount getChange(){
+        return change;
+    }
+
+    private void setCashPayment(Amount cashPayment){
+        this.cashPayment = cashPayment;
+    }
+
+    private void setChange(Amount change){
+        this.change = change;
+    }
+
 
 }

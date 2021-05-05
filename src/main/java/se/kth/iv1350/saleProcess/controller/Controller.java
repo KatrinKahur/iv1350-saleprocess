@@ -3,20 +3,17 @@ package se.kth.iv1350.saleProcess.controller;
 import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.CashRegister;
-import se.kth.iv1350.saleProcess.model.DiscountCalculator;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 /**
  * All method calls from the view to the model are passed through this class.
  */
 public class Controller {
-    private Printer printer;
-    private CashRegister cashRegister;
-    private Inventory inventory;
-    private SaleCatalog saleCatalog;
-    private CustomerCatalog customerCatalog;
-    private Accounting accounting;
-    private DiscountCalculator discCalculator;
+    private final Printer printer;
+    private final CashRegister cashRegister;
+    private final Inventory inventory;
+    private final SaleCatalog saleCatalog;
+    private final Accounting accounting;
     private Sale currentSale;
 
     /**
@@ -27,18 +24,16 @@ public class Controller {
 
         this.inventory = creator.getInventory();
         this.saleCatalog = creator.getSaleCatalog();
-        this.customerCatalog = creator.getCustomerCatalog();
         this.accounting = creator.getAccounting();
         this.printer = new Printer();
         this.cashRegister = new CashRegister();
     }
 
     /**
-     * The method that starts a new sale.
+     * This method that starts a new sale.
      */
     public void startSale(){
         currentSale = new Sale();
-        discCalculator = new DiscountCalculator();
     }
 
     /**
@@ -62,22 +57,18 @@ public class Controller {
     }
 
     /**
-     * This method handles the discount request by making the correct system calls to find a matching discount and update the total price
-     * @param searchedCustomer <code>CustomerDTO</code> that is used to get the membership level
-     * @return The total price of the sale after applying the discounts
+     * This class makes the correct system calls to the model to register payment
+     * @param cashPayment Paid amount
+     * @return String representation of the receipt
      */
-    public Amount handleDiscountRequest(CustomerDTO searchedCustomer){
-        CustomerDTO foundCustomer = customerCatalog.searchCustomer(searchedCustomer);
-        Amount calculatedDiscount = discCalculator.calculateDiscount(currentSale, foundCustomer);
-        currentSale.applyDiscount(calculatedDiscount);
-        return currentSale.getTotalPrice();
-    }
-
     public String pay(Amount cashPayment){
-        Amount change = cashRegister.addPayment(cashPayment, currentSale);
-       return currentSale.registerPayment(cashPayment, change);
+
+        currentSale.registerPayment(cashRegister, cashPayment);
+        String receipt = currentSale.printReceipt(printer);
+        inventory.sendSaleToInventory(currentSale);
+        accounting.sendSaleToAccounting(currentSale);
+        saleCatalog.logSale(currentSale);
+        return receipt;
     }
-
-
 
 }

@@ -32,10 +32,7 @@ public class Item {
         priceWithVAT = (convertVATPercentageIntoAmount()).plus(price);
     }
 
-    /**
-     * This method converts the VAT rate into <code>Amount</code>
-     * @return <code>Amount</code> of the items VAT rate regarding to its price
-     */
+
     private Amount convertVATPercentageIntoAmount(){
         return new Amount(VAT/100).multiply(price);
     }
@@ -53,14 +50,6 @@ public class Item {
      */
     void increaseQuantity(){
         quantity++;
-    }
-
-    /**
-     * This method sets the item quantity
-     * @param quantity Quantity of the item
-     */
-    void setQuantity(int quantity){
-        this.quantity = quantity;
     }
 
     /**

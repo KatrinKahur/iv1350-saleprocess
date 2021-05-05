@@ -10,7 +10,6 @@ public class ItemDTO {
     private final Amount price;
     private final int VAT;
     private final int barcode;
-    private int quantity;
 
     /**
      * This method creates an instance of <code>ItemDTO</code>
@@ -24,7 +23,6 @@ public class ItemDTO {
         this.price = price;
         this.VAT = VAT;
         this.barcode = identifier.getBarcode();
-        this.quantity = identifier.getQuantity();
     }
 
     /**
