@@ -30,7 +30,6 @@ public class Amount {
         if (amountToCompare == null || !(amountToCompare instanceof Amount)){
             return false;
         }
-
         Amount comparedAmount = (Amount) amountToCompare;
         return amount == comparedAmount.amount;
     }

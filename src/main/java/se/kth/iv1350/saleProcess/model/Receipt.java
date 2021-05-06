@@ -1,5 +1,8 @@
 package se.kth.iv1350.saleProcess.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * This class represents a sale receipt.
  */
@@ -49,4 +52,5 @@ public class Receipt {
         return receiptToString.toString();
 
     }
+
 }

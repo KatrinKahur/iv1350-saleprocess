@@ -5,6 +5,7 @@ import se.kth.iv1350.saleProcess.integration.Printer;
 import se.kth.iv1350.saleProcess.integration.SaleDTO;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class Sale {
     private final Receipt receipt;
-    private LocalDateTime saleTime;
+    private String saleTime;
     private final List<Item> listOfItems;
     private Item recentlyScannedItem;
     private Amount runningTotal;
@@ -31,19 +32,12 @@ public class Sale {
         runningTotal = new Amount();
     }
 
-
-
-
     /**
      * This method gets the time and the date of the sale.
-     * @return The time and the date of the sale
+     * @return A String with the time and the date of the sale
      */
-    LocalDateTime getSaleTime(){
+    String getSaleTime(){
         return saleTime;
-    }
-
-    private void updateRunningTotal(){
-        runningTotal = runningTotal.plus(recentlyScannedItem.getPriceWithVAT());
     }
 
     /**
@@ -163,18 +157,21 @@ public class Sale {
     }
 
     private void setSaleTime(){
-        saleTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        saleTime = LocalDateTime.now().format(formatter);
     }
 
     private void setRecentlyScannedItem(Item newItem){
         recentlyScannedItem = newItem;
     }
 
-
     private void addRecentlyScannedItemToTheItemList(){
         listOfItems.add(recentlyScannedItem);
     }
 
+    private void updateRunningTotal(){
+        runningTotal = runningTotal.plus(recentlyScannedItem.getPriceWithVAT());
+    }
 
     private SaleDTO createSaleInformationReturnedToView(){
         return new SaleDTO(runningTotal, recentlyScannedItem);

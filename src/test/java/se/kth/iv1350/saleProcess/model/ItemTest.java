@@ -52,6 +52,34 @@ class ItemTest {
     }
 
     @Test
+    void testItemsNotEqualBasedOnTheirBarcode(){
+        ItemDTO itemDTO = new ItemDTO("cornflakes", new Amount(50), 20, new ItemIdentifier(25));
+        ItemDTO anotherItemDTO = new ItemDTO("milk", new Amount(23), 20, new ItemIdentifier(27));
+        Item itemInstance = new Item(itemDTO);
+        Item anotherItemInstance = new Item(anotherItemDTO);
+        boolean condition = itemInstance.equals(anotherItemInstance);
+        assertFalse(condition, "Items are equal.");
+    }
+
+    @Test
+    void testItemToCompareNull(){
+        ItemDTO itemDTO = new ItemDTO("cornflakes", new Amount(50), 20, new ItemIdentifier(25));
+        Item itemInstance = new Item(itemDTO);
+        Item anotherItemInstance = null;
+        boolean condition = itemInstance.equals(anotherItemInstance);
+        assertFalse(condition, "Items are equal.");
+    }
+
+    @Test
+    void testItemToCompareNotInstanceOfTheClass(){
+        ItemDTO itemDTO = new ItemDTO("cornflakes", new Amount(50), 20, new ItemIdentifier(25));
+        Item itemInstance = new Item(itemDTO);
+        ItemIdentifier anotherInstance = new ItemIdentifier(9);
+        boolean condition = itemInstance.equals(anotherInstance);
+        assertFalse(condition, "Items are equal.");
+    }
+
+    @Test
     void testItemQuantitySetToDefaultValueOfOne(){
         ItemDTO itemDTO = new ItemDTO("cornflakes", new Amount(50), 20, new ItemIdentifier(25));
         Item itemInstance = new Item(itemDTO);

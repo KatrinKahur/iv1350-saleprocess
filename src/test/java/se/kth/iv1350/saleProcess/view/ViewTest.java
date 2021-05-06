@@ -8,7 +8,7 @@ import se.kth.iv1350.saleProcess.integration.CatalogCreator;
 import se.kth.iv1350.saleProcess.integration.Inventory;
 import se.kth.iv1350.saleProcess.integration.ItemDTO;
 import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
-import se.kth.iv1350.saleProcess.model.Item;
+import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 import java.io.ByteArrayOutputStream;
@@ -49,7 +49,7 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionCorrectItemNameReturnedInSaleInfo() {
+    void testFakeProgramExecutionItemsRegisteredInTheSale() {
         ItemIdentifier identifier = new ItemIdentifier(8);
         ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
@@ -63,19 +63,16 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionCorrectVATPrinted() {
+    void testFakeProgramExecutionSaleDTOWithRunningTotalReturnedAfterRegisteringTheFirstItem() {
         ItemIdentifier identifier = new ItemIdentifier(8);
-        ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
-        ItemDTO anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        Amount itemPriceWithoutVAT = item.getPrice();
+        Amount itemVATDividedByHundred = new Amount(item.getVAT()/100);
+        Amount itemPriceWithVAT = itemPriceWithoutVAT.multiply(itemVATDividedByHundred);
         sale.registerItem(item);
-        sale.registerItem(anotherItem);
-        sale.calculateTotalPrice();
         view.fakeProgramExecution();
         String result = outputContent.toString();
-        assertTrue(result.contains(Integer.toString((int)item.getVAT())), "The VAT rate of the item with barcode 8 is not correct.");
-        assertTrue(result.contains(Integer.toString((int)anotherItem.getVAT())), "The VAT rate of the item with barcode 17 is not correct.");
-        assertTrue(result.contains(sale.getTotalPrice().toString()), "The presented total price is not correct.");
+        assertTrue(result.contains(itemPriceWithVAT.toString()), "Running total after registering item with barcode 8 is not returned.");
     }
 
     @Test
@@ -89,7 +86,7 @@ class ViewTest {
         sale.calculateTotalPrice();
         view.fakeProgramExecution();
         String result = outputContent.toString();
-        assertTrue(result.contains(sale.getTotalPrice().toString()), "The presented total price is not correct.");
+        assertTrue(result.contains(sale.getTotalPrice().toString()), "The presented total price is incorrect.");
     }
 
     @Test
@@ -103,7 +100,7 @@ class ViewTest {
         sale.calculateTotalPrice();
         view.fakeProgramExecution();
         String result = outputContent.toString();
-        assertTrue(result.contains("Thank you for your purchase!"), "The presented total price is not correct.");
+        assertTrue(result.contains("Thank you for your purchase!"), "The receipt has not been printed.");
     }
 
 

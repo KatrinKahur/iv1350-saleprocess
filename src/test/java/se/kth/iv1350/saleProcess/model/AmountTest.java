@@ -28,9 +28,8 @@ class AmountTest {
     void testEquals() {
         double amountToCompare = 5;
         anotherInstance = new Amount(amountToCompare);
-        boolean expectedResult = true;
         boolean result = amountInstance.equals(anotherInstance);
-        assertEquals(expectedResult, result,"The two amounts are not equal.");
+        assertTrue(result,"The two amounts are not equal.");
     }
 
     @Test

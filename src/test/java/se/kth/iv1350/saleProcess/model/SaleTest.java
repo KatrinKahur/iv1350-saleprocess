@@ -84,7 +84,7 @@ class SaleTest {
     }
 
     @Test
-    void testThatChangeIsCalculatedCorrectly(){
+    void testThatChangeIsSetCorrectly(){
         CashRegister cashRegister = new CashRegister();
         saleInstance.registerItem(itemDTOYoghurt);
         saleInstance.calculateTotalPrice();
