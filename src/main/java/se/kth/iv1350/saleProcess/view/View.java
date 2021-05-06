@@ -38,7 +38,7 @@ public class View {
         System.out.println("Enter a barcode: ");
         scannedBarcode = 17;
         enteredIdentifier = new ItemIdentifier(scannedBarcode);
-        System.out.println("Barcode " + scannedBarcode + " has been entered in the program.");
+        System.out.println("Barcode " + scannedBarcode + " has been entered.");
         saleInfo = contr.registerItem(enteredIdentifier);
         System.out.println("Item with barcode " + scannedBarcode + " has been registered." +
                 " The program returns item description and running total.");
