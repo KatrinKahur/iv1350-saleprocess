@@ -6,6 +6,9 @@ package se.kth.iv1350.saleProcess.model;
 public class Amount {
     private final double amount;
 
+    /**
+     * Creates an instance of <code>Amount</code>.
+     */
     public Amount(){
         this(0);
     }
@@ -33,16 +36,16 @@ public class Amount {
     }
 
     /**
-     * This method adds the specified <code>Amount</code> to this <code>Amount</code>
-     * @param amountToAdd The <code>Amount</code> that needs to be added to this <code>amount</code>
-     * @return The new <code>Amount</code> after adding the specified <code>Amount</code>
+     * This method performs addition between two <code>Amount</code>s
+     * @param amountToAdd The <code>Amount</code> that needs to be added to this <code>Amount</code>
+     * @return The result of the addition
      */
     public Amount plus (Amount amountToAdd){
         return new Amount(amount + amountToAdd.amount);
     }
 
     /**
-     * This method subtracts the specified <code>Amount</code> from this <code>Amount</code>
+     * This method performs subtraction between two <code>Amount</code>s
      * @param amountToSubtract The <code>Amount</code> that needs to be subtracted from this <code>amount</code>
      * @return The result of the subtraction
      */
@@ -51,8 +54,8 @@ public class Amount {
     }
 
     /**
-     * This method multiplies this <code>Amount</code> by the specified <code>Amount</code>
-     * @param amountToMultiply <code>Amount</code> that this <code>amount</code> needs to be mupltiplied by
+     * This method performs multiplication between two <code>Amount</code>s
+     * @param amountToMultiply <code>Amount</code> that this <code>amount</code> needs to be multiplied by
      * @return The result of the multiplication
      */
     public Amount multiply(Amount amountToMultiply){
@@ -67,6 +70,10 @@ public class Amount {
         return Double.toString(amount);
     }
 
+    /**
+     * This method gets the value of amount
+     * @return The value of amount
+     */
     double getAmount(){
         return amount;
     }

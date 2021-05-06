@@ -14,12 +14,33 @@ public class Inventory {
     List <ItemDTO> itemList = new ArrayList<>();
 
     /**
-     * Creates an instance of <code>Inventory</code>
+     * Creates an instance of <code>Inventory</code> containing different grocery items that can be scanned by the customer.
      */
     Inventory(){
         addItemsToItemList();
     }
 
+    /**
+     * This class searches the matching item in the itemList
+     * @param searchedIdentifier Item identifier of the specified item
+     * @return <code>ItemDTO</code> which barcode matches the searchedIdentifier's barcode
+     */
+    public ItemDTO searchItemByBarcode(ItemIdentifier searchedIdentifier){
+        int searchedItemBarcode = searchedIdentifier.getBarcode();
+
+        for (ItemDTO item : itemList ){
+            if(searchedItemBarcode == item.getBarcode())
+                return item;
+        }
+        return null;
+    }
+
+    /**
+     * This method is responsible for making the correct system calls to update the external inventory system.
+     * @param currentSale The current sale that includes all the necessary information needed to update the inventory.
+     */
+    public void updateInventory(Sale currentSale){
+    }
 
     private void addItemsToItemList(){
         itemList.add(new ItemDTO("Milk", new Amount(25), 25, new ItemIdentifier(1)));
@@ -43,26 +64,5 @@ public class Inventory {
         itemList.add(new ItemDTO("Pepper", new Amount(13), 12, new ItemIdentifier(19)));
         itemList.add(new ItemDTO("Baking powder", new Amount(22), 6, new ItemIdentifier(20)));
     }
-
-    /**
-     * This class searches the matching item in the <code>itemList</code>
-     * @param searchedIdentifier Item identifier of the specified item
-     * @return <code>ItemDTO</code> which barcode matches <code>searchedIdentifier</code>s barcode
-     */
-    public ItemDTO searchItem(ItemIdentifier searchedIdentifier){
-        int searchedItemBarcode = searchedIdentifier.getBarcode();
-
-        for (ItemDTO item : itemList ){
-            if(searchedItemBarcode == item.getBarcode())
-                return item;
-        }
-
-        return null;
-    }
-
-
-    public void sendSaleToInventory(Sale currentSale){
-    }
-
 
 }

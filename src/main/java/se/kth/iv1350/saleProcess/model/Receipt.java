@@ -15,11 +15,10 @@ public class Receipt {
     }
 
     /**
-     * Creates a formatted string representation of the receipt
-     * @return String representation of the receipt
+     * Creates a formatted string representation of <code>Receipt</code>
+     * @return String representation of <code>Receipt</code>
      */
-    @Override
-    public String toString(){
+    public String receiptToString(){
         StringBuilder receiptToString = new StringBuilder("RECEIPT \n");
         receiptToString.append("Store name: FoodLand\n");
         receiptToString.append("Store address: Kantarellstigen 34, 13411\n" );
@@ -36,6 +35,9 @@ public class Receipt {
         receiptToString.append("\n");
         receiptToString.append("Total price: ");
         receiptToString.append(currentSale.getTotalPrice());
+        receiptToString.append(" SEK\n");
+        receiptToString.append("Total VAT: ");
+        receiptToString.append(currentSale.getVATForTheEntireSale());
         receiptToString.append(" SEK\n");
         receiptToString.append("Cash payment: ");
         receiptToString.append(currentSale.getCashPayment());

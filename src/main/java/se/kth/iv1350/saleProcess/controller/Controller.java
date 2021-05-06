@@ -3,6 +3,7 @@ package se.kth.iv1350.saleProcess.controller;
 import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.CashRegister;
+import se.kth.iv1350.saleProcess.model.DiscountCalculator;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 /**
@@ -14,11 +15,12 @@ public class Controller {
     private final Inventory inventory;
     private final SaleCatalog saleCatalog;
     private final Accounting accounting;
+    private final DiscountCalculator discCalculator;
     private Sale currentSale;
 
     /**
      * Creates a new instance of the Controller class.
-     * @param creator Used get all registries that are used in the program.
+     * @param creator Used to get all registries that are used in the program.
      */
     public Controller(CatalogCreator creator){
 
@@ -27,10 +29,11 @@ public class Controller {
         this.accounting = creator.getAccounting();
         this.printer = new Printer();
         this.cashRegister = new CashRegister();
+        this.discCalculator = new DiscountCalculator();
     }
 
     /**
-     * This method that starts a new sale.
+     * This method starts a new sale.
      */
     public void startSale(){
         currentSale = new Sale();
@@ -39,10 +42,10 @@ public class Controller {
     /**
      * This method registers a newly scanned item.
      * @param identifier Used to get the barcode of the newly scanned item
-     * @return <code>String</code>> including information about item name, price and running total
+     * @return String with the information about item name, price and running total
      */
     public String registerItem(ItemIdentifier identifier){
-        ItemDTO foundItem = inventory.searchItem(identifier);
+        ItemDTO foundItem = inventory.searchItemByBarcode(identifier);
         SaleDTO saleInformation = currentSale.registerItem(foundItem);
         return saleInformation.toString();
     }
@@ -52,23 +55,20 @@ public class Controller {
      * @return The total price of the sale.
      */
     public Amount endSale(){
-        Amount totalPrice = currentSale.endSale();
-        return totalPrice;
+        currentSale.calculateTotalPrice();
+        return currentSale.getTotalPrice();
     }
 
     /**
-     * This class makes the correct system calls to the model to register payment
-     * @param cashPayment Paid amount
-     * @return String representation of the receipt
+     * This method makes the correct system calls to the model to register payment and print a receipt.
+     * @param cashPayment Amount paid by the customer for the current sale
      */
-    public String pay(Amount cashPayment){
-
+    public void pay(Amount cashPayment){
         currentSale.registerPayment(cashRegister, cashPayment);
-        String receipt = currentSale.printReceipt(printer);
-        inventory.sendSaleToInventory(currentSale);
-        accounting.sendSaleToAccounting(currentSale);
+        inventory.updateInventory(currentSale);
+        accounting.updateAccounting(currentSale);
         saleCatalog.logSale(currentSale);
-        return receipt;
+        currentSale.printReceipt(printer);
     }
 
 }

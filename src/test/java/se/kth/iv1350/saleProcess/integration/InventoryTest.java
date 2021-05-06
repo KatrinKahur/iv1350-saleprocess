@@ -24,9 +24,17 @@ class InventoryTest {
     @Test
     void testSearchedItemIsFound() {
         ItemIdentifier searchedIdentifier = new ItemIdentifier(5);
-        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 15, new ItemIdentifier(5));
+        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(5));
         ItemDTO expResult = searchedItem;
-        ItemDTO result = inventory.searchItem(searchedIdentifier);
+        ItemDTO result = inventory.searchItemByBarcode(searchedIdentifier);
         assertEquals(expResult, result, "Wrong item found.");
+    }
+
+    @Test
+    void testSearchedItemNotFound(){
+        ItemIdentifier searchedIdentifier = new ItemIdentifier(30);
+        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(30));
+        ItemDTO result = inventory.searchItemByBarcode(searchedIdentifier);
+        assertNull(result, "The fetched item is not null");
     }
 }

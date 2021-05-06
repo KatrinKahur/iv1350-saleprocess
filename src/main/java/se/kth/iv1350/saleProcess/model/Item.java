@@ -11,11 +11,10 @@ public class Item {
     private final String name;
     private final int barcode;
     private int quantity;
-    private Amount priceWithVAT;
 
     /**
      * Creates an instance of <code>Item</code>
-     * @param foundItem The <code>ItemDTO</code> fetched from <code>Inventory</code>
+     * @param foundItem The <code>ItemDTO</code> fetched from the inventory
      */
     Item (ItemDTO foundItem){
         this.price = foundItem.getPrice();
@@ -26,75 +25,47 @@ public class Item {
     }
 
     /**
-     * This method adds <code>VAT</code> to <code>price</code>
+     * This method gets the total price of the item, including VAT
+     * @return Item price incl. VAT
      */
-    void calculatePriceWithVAT(){
-        priceWithVAT = (convertVATPercentageIntoAmount()).plus(price);
-    }
-
-
-    private Amount convertVATPercentageIntoAmount(){
-        return new Amount(VAT/100).multiply(price);
+    Amount getPriceWithVAT(){
+        return getVATConvertedIntoAmount().plus(price);
     }
 
     /**
-     * This method gets the value of <code>priceWithVAT</code>
-     * @return The value of <code>priceWithVAT</code>
-     */
-    public Amount getPriceWithVAT(){
-        return priceWithVAT;
-    }
-
-    /**
-     * This method updates increases <code>quantity</code> by 1
+     * This method increases item quantity by 1
      */
     void increaseQuantity(){
         quantity++;
     }
 
     /**
-     * This method gets the value of <code>quantity</code>
-     * @return The value of <code>quantity</code>
+     * This method gets the value of quantity
+     * @return The value of quantity
      */
     int getQuantity(){
         return quantity;
     }
 
     /**
-     * This method gets the value of <code>barcode</code>
-     * @return The value of <code>barcode</code>
+     * This method gets the value of barcode
+     * @return The value of barcode
      */
     int getBarcode(){
         return barcode;
     }
 
     /**
-     * This method gets the value of <code>VAT</code>
-     * @return The value of <code>VAT</code>
+     * This method gets the value of VAT
+     * @return The value of VAT
      */
     double getVAT(){
         return VAT;
     }
 
     /**
-     * This method gets the value of <code>price</code>
-     * @return The value of <code>price</code>
-     */
-    Amount getPrice(){
-        return price;
-    }
-
-    /**
-     * This method gets the name of the item.
-     * @return The name of the item
-     */
-    String getName(){
-        return name;
-    }
-
-    /**
-     * This method is a <code>String</code> representation of Item name, price and VAT
-     * @return <code>String</code> with item name, price and VAT
+     * This method is a string representation of <code>Item</code>
+     * @return String with item name, price and VAT
      */
     @Override
     public String toString(){
@@ -107,11 +78,21 @@ public class Item {
      * @return Returns <code>true</code> if <code>Item</code>s are equal, <code>false</code> if they are not.
      */
     public boolean equals(Object other){
-        if (other == null || !(other instanceof Item))
+        if (other == null)
+            return false;
+
+        if (!(other instanceof Item))
             return false;
 
         Item comparedItem = (Item) other;
-
         return barcode == comparedItem.getBarcode();
+    }
+
+    /**
+     * This method gets the items VAT calculated to its corresponding <code>Amount</code>
+     * @return The value of VAT calculated to its corresponding <code>Amount</code>
+     */
+    Amount getVATConvertedIntoAmount(){
+        return new Amount(VAT/100).multiply(price);
     }
 }

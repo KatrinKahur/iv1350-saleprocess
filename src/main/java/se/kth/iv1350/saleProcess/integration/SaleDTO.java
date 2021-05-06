@@ -22,8 +22,8 @@ public class SaleDTO {
     }
 
     /**
-     * This method creates a formatted string with the information about running total and recently scanned item.
-     * @return Formatted string with the information about running total and recently scanned item.
+     * This method creates a formatted string with the information about running total and the recently scanned item.
+     * @return Formatted string with the information about running total and the recently scanned item.
      */
     @Override
     public String toString(){

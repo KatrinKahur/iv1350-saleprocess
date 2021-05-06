@@ -1,7 +1,7 @@
 package se.kth.iv1350.saleProcess.integration;
 
 /**
- * This class represents an item identifier of <code>Item</code>.
+ * This class represents an item identifier of a <code>Item</code>.
  */
 public class ItemIdentifier {
     private final int barcode;
@@ -15,8 +15,8 @@ public class ItemIdentifier {
     }
 
     /**
-     * This class gets the value of <code>barCode</code>
-     * @return The value of <code>barCode</code>
+     * This method gets the value of barCode
+     * @return The value of barCode
      */
     public int getBarcode(){
         return barcode;

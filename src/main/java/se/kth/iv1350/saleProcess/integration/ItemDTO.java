@@ -8,7 +8,7 @@ import se.kth.iv1350.saleProcess.model.Amount;
 public class ItemDTO {
     private final String name;
     private final Amount price;
-    private final int VAT;
+    private final double VAT;
     private final int barcode;
 
     /**
@@ -27,7 +27,7 @@ public class ItemDTO {
 
     /**
      * This class gets the item name.
-     * @return The value of <code>name</code>
+     * @return The value of name
      */
     public String getName(){
         return name;
@@ -35,7 +35,7 @@ public class ItemDTO {
 
     /**
      * This class gets the item price.
-     * @return The value of <code>price</code>
+     * @return The value price
      */
     public Amount getPrice(){
         return price;
@@ -43,15 +43,15 @@ public class ItemDTO {
 
     /**
      * This class gets the item VAT rate.
-     * @return The value of <code>VAT</code>
+     * @return The value of VAT
      */
-    public int getVAT(){
+    public double getVAT(){
         return VAT;
     }
 
     /**
      * This class gets the item barcode.
-     * @return The value of <code>barcode</code>
+     * @return The value of barcode
      */
     public int getBarcode() {
         return barcode;
@@ -60,15 +60,17 @@ public class ItemDTO {
     /**
      * This class compares two instances of <code>ItemDTO</code> to determine whether they are equal.
      * @param other The specified <code>ItemDTO</code> that is compared to this <code>ItemDTO</code>
-     * @return Returns <code>true</code> if <code>ItemDTO</code>s are equal, <code>false</code> if they are not.
+     * @return Returns <code>true</code> if the objects are equal, <code>false</code> if they are not.
      */
     public boolean equals(Object other){
-       if (other == null || !(other instanceof ItemDTO))
+       if (other == null)
            return false;
+
+        if(!(other instanceof ItemDTO))
+            return false;
 
        ItemDTO comparedItem = (ItemDTO) other;
 
-        return barcode == comparedItem.getBarcode();
+       return barcode == comparedItem.getBarcode();
     }
-
 }

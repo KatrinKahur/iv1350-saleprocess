@@ -7,29 +7,38 @@ public class CatalogCreator {
     private Inventory inventory = new Inventory();
     private SaleCatalog saleCatalog = new SaleCatalog();
     private Accounting accounting = new Accounting();
+    private CustomerCatalog customerCatalog = new CustomerCatalog();
 
     /**
-     * This method gets the value of <code>inventory</code>
-     * @return The value of <code>inventory</code>
+     * This method gets the value of inventory
+     * @return The value of inventory
      */
     public Inventory getInventory(){
         return inventory;
     }
 
     /**
-     * This method gets the value of <code>saleCatalog</code>
-     * @return The value of <code>saleCatalog</code>
+     * This method gets the value of saleCatalog
+     * @return The value of saleCatalog
      */
     public SaleCatalog getSaleCatalog(){
         return saleCatalog;
     }
 
     /**
-     * This method gets the value of <code>accounting</code>
-     * @return The value of <code>accounting</code>
+     * This method gets the value of accounting
+     * @return The value of accounting
      */
     public Accounting getAccounting(){
         return accounting;
+    }
+
+    /**
+     * This method gets the value of customerCatalog
+     * @return The value of customerCatalog
+     */
+    public CustomerCatalog getCustomerCatalog(){
+        return customerCatalog;
     }
 
 }

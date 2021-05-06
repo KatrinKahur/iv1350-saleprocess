@@ -12,9 +12,9 @@ import java.util.List;
  * This class represents the current sale.
  */
 public class Sale {
-    private Receipt receipt;
+    private final Receipt receipt;
     private LocalDateTime saleTime;
-    private List<Item> listOfItems;
+    private final List<Item> listOfItems;
     private Item recentlyScannedItem;
     private Amount runningTotal;
     private Amount totalPrice;
@@ -22,8 +22,7 @@ public class Sale {
     private Amount change;
 
     /**
-     * Creates an instance of <code>Sale</code>, sets the <code>saleTime</code>, creates a new <code>Receipt</code> and
-     * a new <code>ArrayList</code>
+     * Creates an instance of <code>Sale</code>
       */
     public Sale(){
         setSaleTime();
@@ -33,13 +32,11 @@ public class Sale {
     }
 
 
-    private void setSaleTime(){
-        saleTime = LocalDateTime.now();
-    }
+
 
     /**
-     * This method gets the time of the sale.
-     * @return The time of the sale
+     * This method gets the time and the date of the sale.
+     * @return The time and the date of the sale
      */
     LocalDateTime getSaleTime(){
         return saleTime;
@@ -58,13 +55,18 @@ public class Sale {
     }
 
     /**
-     * This method gets the recently scanned item.
-     * @return The value of <code>recentlyScannedItem</code>
+     * This method gets the most recently scanned item.
+     * @return The most recently scanned item
      */
     public Item getRecentlyScannedItem(){
         return recentlyScannedItem;
     }
 
+    /**
+     * This method adds the scanned item to the sale
+     * @param foundItem The fetched item from the inventory
+     * @return <code>SaleDTO</code> with the description of the scanned item and the running total
+     */
     public SaleDTO registerItem(ItemDTO foundItem){
         Item existingItem = checkForExistingItem(foundItem);
 
@@ -77,92 +79,76 @@ public class Sale {
             setRecentlyScannedItem(existingItem);
         }
 
-        recentlyScannedItem.calculatePriceWithVAT();
         updateRunningTotal();
-        return createSaleInformation();
+        return createSaleInformationReturnedToView();
     }
 
-
-    private Item checkForExistingItem(ItemDTO foundItem){
-        for (Item item : listOfItems){
-            if (foundItem.getBarcode() == item.getBarcode())
-                return item;
-        }
-        return null;
-    }
-
-
-    private void setRecentlyScannedItem(Item newItem){
-        recentlyScannedItem = newItem;
-    }
-
-
-    private void addRecentlyScannedItemToTheItemList(){
-        listOfItems.add(recentlyScannedItem);
-    }
-
-
-    private SaleDTO createSaleInformation(){
-        return new SaleDTO(runningTotal, recentlyScannedItem);
-    }
-
-    private void calculateTotalPrice(){
+    /**
+     * This method calculates the total price of the sale.
+     */
+    public void calculateTotalPrice(){
         totalPrice = new Amount(runningTotal.getAmount());
     }
 
     /**
-     * This method gets the total price of the sale.
-     * @return The value of <code>totalPrice</code>
+     * This method gets the value of totalPrice
+     * @return The value of totalPrice
      */
     public Amount getTotalPrice(){
         return totalPrice;
     }
 
     /**
-     * This method gets the items in <code>listOfItems</code>
-     * @return It returns the value of <code>listOfItems</code>
+     * This method gets the items in listOfItems
+     * @return The value of listOfItems
      */
-    public List<Item> getListOfItems(){
+    List<Item> getListOfItems(){
         return listOfItems;
     }
 
     /**
-     * This method ends the sale by calculating the total price
-     * @return The total price of the sale
+     * This method makes the correct system calls to register a cash payment.
+     * @param cashRegister The cash register used to register cash payments
+     * @param cashPayment Paid amount
      */
-    public Amount endSale(){
-        calculateTotalPrice();
-        return getTotalPrice();
-    }
-
-
     public void registerPayment(CashRegister cashRegister, Amount cashPayment){
         setCashPayment(cashPayment);
-        Amount change = cashRegister.addPayment(this);
-        setChange(change);
-        receipt.sendSaleToReceipt(this);
+        cashRegister.registerPayment(this);
+        setChange(cashRegister.getChange(this));
     }
 
     /**
      * This method calls the printer to print out the receipt
      * @param printer The object representing the printer
-     * @return String representation of the receipt
      */
-    public String printReceipt(Printer printer){
-        return printer.printReceipt(receipt);
+    public void printReceipt(Printer printer){
+        receipt.sendSaleToReceipt(this);
+        printer.printReceipt(receipt);
     }
 
     /**
-     * This method gets the value of <code>cashPayment</code>
-     * @return The value of <code>cashPayment</code>
+     * This method gets the <code>Amount</code> of VAT for the entire sale.
+     * @return <code>Amount</code> of VAT for the entire sale
+     */
+    Amount getVATForTheEntireSale(){
+        Amount totalVAT = new Amount();
+        for(Item item : listOfItems){
+            totalVAT = totalVAT.plus(item.getVATConvertedIntoAmount());
+        }
+        return totalVAT;
+    }
+
+    /**
+     * This method gets the value of cashPayment
+     * @return The value of cashPayment
      */
     Amount getCashPayment(){
         return cashPayment;
     }
 
     /**
-     * This method gets the value of <code>change</code>
-     * @return The value of <code>change</code>
+     * This method gets the value of change
+     * @return The value of change
      */
     Amount getChange(){
         return change;
@@ -176,5 +162,29 @@ public class Sale {
         this.change = change;
     }
 
+    private void setSaleTime(){
+        saleTime = LocalDateTime.now();
+    }
 
+    private void setRecentlyScannedItem(Item newItem){
+        recentlyScannedItem = newItem;
+    }
+
+
+    private void addRecentlyScannedItemToTheItemList(){
+        listOfItems.add(recentlyScannedItem);
+    }
+
+
+    private SaleDTO createSaleInformationReturnedToView(){
+        return new SaleDTO(runningTotal, recentlyScannedItem);
+    }
+
+    private Item checkForExistingItem(ItemDTO foundItem){
+        for (Item item : listOfItems){
+            if (foundItem.getBarcode() == item.getBarcode())
+                return item;
+        }
+        return null;
+    }
 }

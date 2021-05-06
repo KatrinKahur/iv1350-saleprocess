@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class includes system calls to the database with all completed sales.
+ * This class contains system calls to the database that has all completed sales.
  */
 public class SaleCatalog {
 
-    private List<Sale> saleLog = new ArrayList<>();
+    private final List<Sale> saleLog = new ArrayList<>();
+
     /**
-     * This method adds the sale to the sale log.
+     * This method logs a completed sale.
      * @param currentSale The specified sale that is logged
      */
     public void logSale(Sale currentSale){
