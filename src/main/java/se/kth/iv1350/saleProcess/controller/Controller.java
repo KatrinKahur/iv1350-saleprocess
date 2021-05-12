@@ -42,12 +42,11 @@ public class Controller {
     /**
      * This method registers a newly scanned item.
      * @param identifier Used to get the barcode of the newly scanned item
-     * @return String with the information about item name, price and running total
+     * @return <code>SaleDTO</code>with the information about item name, price and running total
      */
-    public String registerItem(ItemIdentifier identifier){
+    public SaleDTO registerItem(ItemIdentifier identifier){
         ItemDTO foundItem = inventory.searchItemByBarcode(identifier);
-        SaleDTO saleInformation = currentSale.registerItem(foundItem);
-        return saleInformation.toString();
+        return currentSale.registerItem(foundItem);
     }
 
     /**

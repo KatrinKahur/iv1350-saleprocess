@@ -49,8 +49,8 @@ class ControllerTest {
         ItemIdentifier identifier = new ItemIdentifier(16);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
         controller.startSale();
-        String saleInfo = controller.registerItem(identifier);
-        assertTrue(saleInfo.contains(item.getName()), "Item with barcode 16 is not registered in the sale.");
+        SaleDTO saleInfo = controller.registerItem(identifier);
+        assertTrue(saleInfo.toString().contains(item.getName()), "Item with barcode 16 is not registered in the sale.");
     }
 
     @Test

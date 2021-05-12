@@ -2,6 +2,7 @@ package se.kth.iv1350.saleProcess.view;
 
 import se.kth.iv1350.saleProcess.controller.Controller;
 import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
+import se.kth.iv1350.saleProcess.integration.SaleDTO;
 import se.kth.iv1350.saleProcess.model.Amount;
 
 /**
@@ -30,10 +31,10 @@ public class View {
         int scannedBarcode = 8;
         ItemIdentifier enteredIdentifier = new ItemIdentifier(scannedBarcode);
         System.out.println("Barcode " + scannedBarcode + " has been entered.");
-        String saleInfo = contr.registerItem(enteredIdentifier);
+        SaleDTO saleInfo = contr.registerItem(enteredIdentifier);
         System.out.println("Item with barcode " + scannedBarcode + " has been registered. " +
                 "The program returns item description and running total.");
-        System.out.println(saleInfo);
+        System.out.println(saleInfo.toString());
 
         System.out.println("Enter a barcode: ");
         scannedBarcode = 17;
@@ -42,7 +43,7 @@ public class View {
         saleInfo = contr.registerItem(enteredIdentifier);
         System.out.println("Item with barcode " + scannedBarcode + " has been registered." +
                 " The program returns item description and running total.");
-        System.out.println(saleInfo);
+        System.out.println(saleInfo.toString());
 
         System.out.println();
 
