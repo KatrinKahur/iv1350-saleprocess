@@ -24,17 +24,48 @@ class InventoryTest {
     @Test
     void testSearchedItemIsFound() {
         ItemIdentifier searchedIdentifier = new ItemIdentifier(5);
-        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(5));
-        ItemDTO expResult = searchedItem;
-        ItemDTO result = inventory.searchItemByBarcode(searchedIdentifier);
-        assertEquals(expResult, result, "Wrong item found.");
+        ItemDTO expResult = new ItemDTO("meatballs", new Amount(42), 25, searchedIdentifier);
+
+        try {
+            ItemDTO result = inventory.searchItemByBarcode(searchedIdentifier);
+            assertEquals(expResult, result, "Wrong item found.");
+        } catch (InvalidItemIdentifierException | ServerNotRunningException exc){
+            fail("The process of fetching items from the inventory failed. Exception was thrown.");
+            exc.printStackTrace();
+        }
     }
 
     @Test
-    void testSearchedItemNotFound(){
-        ItemIdentifier searchedIdentifier = new ItemIdentifier(30);
-        ItemDTO searchedItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(30));
-        ItemDTO result = inventory.searchItemByBarcode(searchedIdentifier);
-        assertNull(result, "The fetched item is not null");
+    void testExceptionThrownWhenSearchedItemNotFound(){
+        ItemIdentifier nonExistingSearchedIdentifier = new ItemIdentifier(30);
+        ItemDTO nonExistingItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(30));
+
+        try{
+            inventory.searchItemByBarcode(nonExistingSearchedIdentifier);
+            fail("Item search with non-existing item was successful.");
+        }
+        catch(InvalidItemIdentifierException exc){
+            assertTrue(exc.getMessage().contains("Item identifier does not exist."), "Wrong exception message.");
+        }
+        catch (ServerNotRunningException exc){
+            fail("Wrong exception thrown.");
+        }
     }
+
+    @Test
+    void testInventoryDatabaseCannotBeReached(){
+        ItemIdentifier identifierCausingServerException = new ItemIdentifier(20);
+
+        try{
+            inventory.searchItemByBarcode(identifierCausingServerException);
+            fail("Item with the identifier that causes the server exception was successfully fetched from the Inventory.");
+        }
+        catch (ServerNotRunningException exc){
+            assertTrue(exc.getMessage().contains("Cannot reach the server."), "Wrong exception message.");
+        }
+        catch (InvalidItemIdentifierException exc){
+            fail("Wrong exception thrown.");
+        }
+    }
+
 }

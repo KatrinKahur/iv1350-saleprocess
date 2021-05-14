@@ -4,14 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.kth.iv1350.saleProcess.controller.Controller;
-import se.kth.iv1350.saleProcess.integration.CatalogCreator;
-import se.kth.iv1350.saleProcess.integration.Inventory;
-import se.kth.iv1350.saleProcess.integration.ItemDTO;
-import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
+import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +24,7 @@ class ViewTest {
     private Inventory inventory;
 
     @BeforeEach
-    void setUp() {
+    void setUp()throws IOException{
         creator = new CatalogCreator();
         controller = new Controller(creator);
         view = new View(controller);
@@ -49,7 +47,7 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionItemsRegisteredInTheSale() {
+    void testFakeProgramExecutionItemsRegisteredInTheSale() throws InvalidItemIdentifierException {
         ItemIdentifier identifier = new ItemIdentifier(8);
         ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
@@ -63,7 +61,7 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionSaleDTOWithRunningTotalReturnedAfterRegisteringTheFirstItem() {
+    void testFakeProgramExecutionSaleDTOWithRunningTotalReturnedAfterRegisteringTheFirstItem() throws InvalidItemIdentifierException{
         ItemIdentifier identifier = new ItemIdentifier(8);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
         Amount itemPriceWithoutVAT = item.getPrice();
@@ -76,7 +74,7 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionCorrectTotalPricePrinted() {
+    void testFakeProgramExecutionCorrectTotalPricePrinted() throws InvalidItemIdentifierException {
         ItemIdentifier identifier = new ItemIdentifier(8);
         ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
@@ -90,7 +88,7 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionReceiptIsPrinted() {
+    void testFakeProgramExecutionReceiptIsPrinted() throws InvalidItemIdentifierException{
         ItemIdentifier identifier = new ItemIdentifier(8);
         ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
         ItemDTO item = inventory.searchItemByBarcode(identifier);
@@ -103,5 +101,21 @@ class ViewTest {
         assertTrue(result.contains("Thank you for your purchase!"), "The receipt has not been printed.");
     }
 
+    @Test
+    void testFakeProgramExecutionOperationFailedExceptionCorrectMessagePrinted(){
+        view.fakeProgramExecution();
+        String result = outputContent.toString();
+        assertTrue(result.contains("ERROR: Item registration failed."), "The output produced by the view after" +
+                    " catching the OperationFailedException is incorrect.");
+    }
+
+    @Test
+    void testFakeProgramExecutionInvalidItemIdentifierExceptionCorrectMessagePrinted(){
+        int barcodeOfAnItemThatDoesNotExist = 25;
+        view.fakeProgramExecution();
+        String result = outputContent.toString();
+        assertTrue(result.contains("ERROR: Item with barcode " + barcodeOfAnItemThatDoesNotExist + " cannot be found."), "The output produced by the view after" +
+                " catching the InvalidItemIdentifierException is incorrect.");
+    }
 
 }

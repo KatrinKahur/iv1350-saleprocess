@@ -43,10 +43,19 @@ public class Controller {
      * This method registers a newly scanned item.
      * @param identifier Used to get the barcode of the newly scanned item
      * @return <code>SaleDTO</code>with the information about item name, price and running total
+     * @throws InvalidItemIdentifierException Thrown when an item with the specified identifier is not found
+     * @throws OperationFailedException Thrown when the operation fails and the reason is unknown
      */
-    public SaleDTO registerItem(ItemIdentifier identifier){
-        ItemDTO foundItem = inventory.searchItemByBarcode(identifier);
-        return currentSale.registerItem(foundItem);
+    public SaleDTO registerItem(ItemIdentifier identifier) throws InvalidItemIdentifierException,
+                                                                        OperationFailedException
+    {
+        try{
+            ItemDTO foundItem = inventory.searchItemByBarcode(identifier);
+            return currentSale.registerItem(foundItem);
+        }
+        catch(ServerNotRunningException serverExc){
+            throw new OperationFailedException("Item registration failed.", serverExc);
+        }
     }
 
     /**

@@ -47,26 +47,65 @@ class ControllerTest {
     @Test
     void testRegisterItem() {
         ItemIdentifier identifier = new ItemIdentifier(16);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
-        controller.startSale();
-        SaleDTO saleInfo = controller.registerItem(identifier);
-        assertTrue(saleInfo.toString().contains(item.getName()), "Item with barcode 16 is not registered in the sale.");
+        ItemDTO item;
+        try{
+          item = inventory.searchItemByBarcode(identifier);
+          controller.startSale();
+          SaleDTO saleInfo = controller.registerItem(identifier);
+          assertTrue(saleInfo.toString().contains(item.getName()), "Item with barcode 16 is not registered in the sale.");
+        }
+        catch (InvalidItemIdentifierException | OperationFailedException | ServerNotRunningException exc){
+            fail("Item registration failed. Got exception.");
+            exc.printStackTrace();
+        }
+    }
+
+    @Test
+    void testOperationFailedExceptionThrownWhenRegisteringItem(){
+        ItemIdentifier identifierCausingServerNotRunningException = new ItemIdentifier(20);
+        try{
+            controller.registerItem(identifierCausingServerNotRunningException);
+            fail("Item causing ServerNotRunningException did not cause any exception.");
+        }
+        catch (OperationFailedException exc){
+            assertTrue(exc.getMessage().contains("Item registration failed."), "Wrong exception message.");
+        }
+        catch (Exception exc){
+            fail("Wrong exception thrown.");
+        }
     }
 
     @Test
     void testEndSale() {
         ItemIdentifier identifier = new ItemIdentifier(9);
         ItemIdentifier anotherIdentifier = new ItemIdentifier(18);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
-        ItemDTO anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        ItemDTO item = null;
+        ItemDTO anotherItem = null;
+
+        try{
+            item = inventory.searchItemByBarcode(identifier);
+            anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        }
+        catch (InvalidItemIdentifierException | ServerNotRunningException exc){
+            fail("Items that should exist do not exist.");
+            exc.printStackTrace();
+        }
+
         Sale anotherSale = new Sale();
         anotherSale.registerItem(item);
         anotherSale.registerItem(anotherItem);
         anotherSale.calculateTotalPrice();
         Amount expResult = anotherSale.getTotalPrice();
         controller.startSale();
-        controller.registerItem(identifier);
-        controller.registerItem(anotherIdentifier);
+
+        try{
+            controller.registerItem(identifier);
+            controller.registerItem(anotherIdentifier);
+        }
+        catch (Exception exc){
+            fail("Items that should exist do not exist.");
+            exc.printStackTrace();
+        }
         Amount result = controller.endSale();
         assertEquals(expResult, result, "The sale is not ended the way it should.");
     }
@@ -76,14 +115,26 @@ class ControllerTest {
         Sale sale = new Sale();
         CashRegister cashRegister = new CashRegister();
         ItemIdentifier identifier = new ItemIdentifier(9);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
+        ItemDTO item = null;
+        try{
+            item = inventory.searchItemByBarcode(identifier);
+        }
+        catch (Exception exc){
+            fail("Item that should exist does not exist. Exception was thrown.");
+            exc.printStackTrace();
+        }
         sale.registerItem(item);
         sale.calculateTotalPrice();
         Amount cashPayment = new Amount(100);
         sale.registerPayment(cashRegister, cashPayment);
-
         controller.startSale();
-        controller.registerItem(identifier);
+        try{
+            controller.registerItem(identifier);
+        }
+        catch (Exception exc){
+            fail("Item registration failed. Got exception.");
+            exc.printStackTrace();
+        }
         controller.endSale();
         controller.pay(cashPayment);
         String result = outputContent.toString();

@@ -24,15 +24,21 @@ public class Inventory {
      * This class searches the matching item in the itemList
      * @param searchedIdentifier Item identifier of the specified item
      * @return <code>ItemDTO</code> which barcode matches the searchedIdentifier's barcode
+     * @throws InvalidItemIdentifierException Thrown when item with the specified barcode is not found.
+     * @throws ServerNotRunningException Thrown when the value of <code>searchedIdentifier</code> is 20.
      */
-    public ItemDTO searchItemByBarcode(ItemIdentifier searchedIdentifier){
+    public ItemDTO searchItemByBarcode(ItemIdentifier searchedIdentifier) throws InvalidItemIdentifierException,
+                                                                                    ServerNotRunningException {
         int searchedItemBarcode = searchedIdentifier.getBarcode();
+
+        if(searchedItemBarcode == 20)
+            throw new ServerNotRunningException();
 
         for (ItemDTO item : itemList ){
             if(searchedItemBarcode == item.getBarcode())
                 return item;
         }
-        return null;
+        throw new InvalidItemIdentifierException(searchedIdentifier);
     }
 
     /**
