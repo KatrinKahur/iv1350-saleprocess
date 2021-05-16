@@ -21,6 +21,7 @@ public class Sale {
     private Amount totalPrice;
     private Amount cashPayment;
     private Amount change;
+    private List<SaleObserver> saleObservers = new ArrayList<>();
 
     /**
      * Creates an instance of <code>Sale</code>
@@ -109,6 +110,7 @@ public class Sale {
         setCashPayment(cashPayment);
         cashRegister.registerPayment(this);
         setChange(cashRegister.getChange(this));
+        notifyObservers();
     }
 
     /**
@@ -118,6 +120,22 @@ public class Sale {
     public void printReceipt(Printer printer){
         receipt.sendSaleToReceipt(this);
         printer.printReceipt(receipt);
+    }
+
+    /**
+     * Adds the specified observer that needs to be notified about a certain state change.
+     * @param observer The specified observer
+     */
+    public void addSaleObserver(SaleObserver observer){
+        saleObservers.add(observer);
+    }
+
+    /**
+     * Adds the specified observers that need to be notified about a certain state change.
+     * @param observers The specified observers
+     */
+    public void addSaleObservers(List<SaleObserver> observers){
+        saleObservers.addAll(observers);
     }
 
     /**
@@ -146,6 +164,11 @@ public class Sale {
      */
     Amount getChange(){
         return change;
+    }
+
+    private void notifyObservers(){
+        for (SaleObserver observer : saleObservers)
+            observer.newPaymentAddedToSale(totalPrice);
     }
 
     private void setCashPayment(Amount cashPayment){

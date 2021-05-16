@@ -22,7 +22,7 @@ public class Receipt {
      * @return String representation of <code>Receipt</code>
      */
     public String receiptToString(){
-        StringBuilder receiptToString = new StringBuilder("RECEIPT \n");
+        StringBuilder receiptToString = new StringBuilder("********* RECEIPT ************\n");
         receiptToString.append("Store name: FoodLand\n");
         receiptToString.append("Store address: Kantarellstigen 34, 13411\n" );
         receiptToString.append("Sale time and date: ");
@@ -48,7 +48,8 @@ public class Receipt {
         receiptToString.append("Change: ");
         receiptToString.append(currentSale.getChange());
         receiptToString.append(" SEK\n\n");
-        receiptToString.append("Thank you for your purchase!");
+        receiptToString.append("Thank you for your purchase!\n");
+        receiptToString.append("*****************************");
         return receiptToString.toString();
 
     }

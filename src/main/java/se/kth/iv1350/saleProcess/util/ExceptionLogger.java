@@ -30,5 +30,6 @@ public class ExceptionLogger {
         logMessage.append(LocalDateTime.now());
         excMsgLogFile.println(logMessage);
         loggedExc.printStackTrace(excMsgLogFile);
+        excMsgLogFile.println();
     }
 }

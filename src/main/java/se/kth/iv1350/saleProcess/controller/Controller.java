@@ -1,10 +1,10 @@
 package se.kth.iv1350.saleProcess.controller;
 
 import se.kth.iv1350.saleProcess.integration.*;
-import se.kth.iv1350.saleProcess.model.Amount;
-import se.kth.iv1350.saleProcess.model.CashRegister;
-import se.kth.iv1350.saleProcess.model.DiscountCalculator;
-import se.kth.iv1350.saleProcess.model.Sale;
+import se.kth.iv1350.saleProcess.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All method calls from the view to the model are passed through this class.
@@ -17,6 +17,7 @@ public class Controller {
     private final Accounting accounting;
     private final DiscountCalculator discCalculator;
     private Sale currentSale;
+    private List<SaleObserver> saleObservers = new ArrayList<>();
 
     /**
      * Creates a new instance of the Controller class.
@@ -37,6 +38,7 @@ public class Controller {
      */
     public void startSale(){
         currentSale = new Sale();
+        currentSale.addSaleObservers(saleObservers);
     }
 
     /**
@@ -77,6 +79,14 @@ public class Controller {
         accounting.updateAccounting(currentSale);
         saleCatalog.logSale(currentSale);
         currentSale.printReceipt(printer);
+    }
+
+    /**
+     * Adds the specified observer that needs to be notified in case of a state change in the <code>Sale</code> object
+     * @param observer The specified observer that needs to be notified
+     */
+    public void addSaleObserver(SaleObserver observer){
+        saleObservers.add(observer);
     }
 
 }
