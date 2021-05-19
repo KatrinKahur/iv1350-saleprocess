@@ -29,7 +29,7 @@ class SaleTest {
     @Test
     void testRunningTotalZeroBeforeRegisteringFirstItem() {
         Amount expResult = new Amount();
-        Amount result = saleInstance.getRunningTotal();
+        Amount result = saleInstance.getPaymentInformation().getRunningTotal();
         assertEquals(expResult, result, "Running total is not 0 at the sale start.");
     }
 
@@ -37,7 +37,7 @@ class SaleTest {
     void testGettingRecentlyScannedItem() {
         saleInstance.registerItem(itemDTOYoghurt);
         Item expResult = new Item(itemDTOYoghurt);
-        Item result = saleInstance.getRecentlyScannedItem();
+        Item result = saleInstance.createSaleDTO().getRecentlyScannedItem();
         assertEquals(expResult, result, "The recently registered item is not correct.");
     }
 
@@ -46,7 +46,7 @@ class SaleTest {
         saleInstance.registerItem(itemDTOYoghurt);
         Item itemInstance = new Item(itemDTOYoghurt);
         Amount expRunningTotal = itemInstance.getPriceWithVAT();
-        Amount runningTotal = saleInstance.getRunningTotal();
+        Amount runningTotal = saleInstance.getPaymentInformation().getRunningTotal();
         assertEquals(expRunningTotal, runningTotal, "Running total is not correct.");
     }
 
@@ -55,8 +55,9 @@ class SaleTest {
         saleInstance.registerItem(itemDTOYoghurt);
         saleInstance.registerItem(itemDTOYoghurt);
         int expItemQuantityAfterRegisteringTheItem = 2;
-        int itemQuantityAfterRegisteringTheItem = saleInstance.getRecentlyScannedItem().getQuantity();
-        assertEquals(expItemQuantityAfterRegisteringTheItem, itemQuantityAfterRegisteringTheItem, "Item quantity is not updated correctly.");
+        int itemQuantityAfterRegisteringTheItem = saleInstance.createSaleDTO().getRecentlyScannedItem().getQuantity();
+        assertEquals(expItemQuantityAfterRegisteringTheItem, itemQuantityAfterRegisteringTheItem,
+                "Item quantity is not updated correctly.");
     }
 
     @Test
@@ -66,44 +67,30 @@ class SaleTest {
         saleInstance.registerItem(itemDTOYoghurt);
         saleInstance.registerItem(itemDTOIceCream);
         Amount expResult = itemInstance.getPriceWithVAT().plus(anotherItemInstance.getPriceWithVAT());
-        saleInstance.calculateTotalPrice();
-        Amount result = saleInstance.getTotalPrice();
+        Amount result = saleInstance.getPaymentInformation().getRunningTotal();
         assertEquals(expResult, result, "The total price returned by the sale is not correct.");
     }
 
     @Test
     void testPaymentRegisteredInTheSale(){
         saleInstance.registerItem(itemDTOYoghurt);
-        saleInstance.calculateTotalPrice();
         CashRegister cashRegister = new CashRegister();
         Amount cashPayment = new Amount(125);
         saleInstance.registerPayment(cashRegister, cashPayment);
         Amount expResult = cashPayment;
-        Amount result = saleInstance.getCashPayment();
-        assertEquals(expResult, result, "Payment is not registered correctly.");
+        Amount result = saleInstance.getPaymentInformation().getPaidAmount();
+        assertEquals(expResult, result, "PaymentInformation is not registered correctly.");
     }
 
     @Test
-    void testThatChangeIsSetCorrectly(){
-        CashRegister cashRegister = new CashRegister();
-        saleInstance.registerItem(itemDTOYoghurt);
-        saleInstance.calculateTotalPrice();
-        Amount totalPrice = saleInstance.getTotalPrice();
-        Amount cashPayment = new Amount(100);
-        saleInstance.registerPayment(cashRegister, cashPayment);
-        Amount expectedChange = cashPayment.minus(totalPrice);
-        Amount change = saleInstance.getChange();
-        assertEquals(expectedChange, change, "Change is not calculated correctly.");
-    }
-
-    @Test
-    void testVATForTheEntireSale(){
+    void testCalculateVAT(){
         saleInstance.registerItem(itemDTOYoghurt);
         saleInstance.registerItem(itemDTOIceCream);
         Item instance = new Item(itemDTOYoghurt);
         Item anotherInstance = new Item(itemDTOIceCream);
         Amount expResult = instance.getVATConvertedIntoAmount().plus(anotherInstance.getVATConvertedIntoAmount());
-        Amount result = saleInstance.getVATForTheEntireSale();
+        saleInstance.calculateVAT();
+        Amount result = saleInstance.createSaleDTO().getTotalVAT();
         assertEquals(expResult, result, "VAT for the entire sale is incorrect.");
     }
 
@@ -111,7 +98,7 @@ class SaleTest {
     void testThatNewItemIsAddedToTheSaleIfASimilarItemDoesNotExistInTheCurrentSale(){
         saleInstance.registerItem(itemDTOYoghurt);
         Item expResult = new Item(itemDTOYoghurt);
-        Item result = saleInstance.getListOfItems().get(0);
+        Item result = saleInstance.createSaleDTO().getItemList().get(0);
         assertEquals(expResult, result, "Item is not added to the sale.");
     }
 
@@ -120,14 +107,15 @@ class SaleTest {
         saleInstance.registerItem(itemDTOYoghurt);
         saleInstance.registerItem(itemDTOIceCream);
         int expResult = 2;
-        int result = saleInstance.getListOfItems().size();
+        int result = saleInstance.createSaleDTO().getItemList().size();
         assertEquals(expResult, result, "Not all items are registered in the sale");
     }
     @Test
     void testRegisterItemReturnsSaleDTOWithCorrectData(){
        SaleDTO saleInfo = saleInstance.registerItem(itemDTOYoghurt);
        String result = saleInfo.toString();
-       assertTrue(result.contains(Integer.toString((int)saleInstance.getRunningTotal().getAmount())),
+       assertTrue(result.contains(
+               Integer.toString((int)saleInstance.getPaymentInformation().getRunningTotal().getAmount())),
                "The running total included in the sale info is incorrect.");
        assertTrue(result.contains(itemDTOYoghurt.getName()),
                "The item name included in the sale info is incorrect.");

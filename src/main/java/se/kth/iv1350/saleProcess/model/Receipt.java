@@ -1,5 +1,7 @@
 package se.kth.iv1350.saleProcess.model;
 
+import se.kth.iv1350.saleProcess.integration.SaleDTO;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -7,14 +9,14 @@ import java.time.format.DateTimeFormatter;
  * This class represents a sale receipt.
  */
 public class Receipt {
-    private Sale currentSale;
+    private SaleDTO currentSaleDTO;
 
     /**
      * This method sends the sale information to the receipt
-     * @param currentSale The sale that is sent to the receipt
+     * @param currentSaleDTO The DTO object of the current <code>Sale</code>
      */
-    void sendSaleToReceipt(Sale currentSale){
-        this.currentSale = currentSale;
+    void sendSaleToReceipt(SaleDTO currentSaleDTO){
+        this.currentSaleDTO = currentSaleDTO;
     }
 
     /**
@@ -26,27 +28,30 @@ public class Receipt {
         receiptToString.append("Store name: FoodLand\n");
         receiptToString.append("Store address: Kantarellstigen 34, 13411\n" );
         receiptToString.append("Sale time and date: ");
-        receiptToString.append(currentSale.getSaleTime());
+        receiptToString.append(currentSaleDTO.getSaleTime());
         receiptToString.append("\n\n");
         receiptToString.append("BOUGHT ITEMS: \n\n");
 
-        for (Item item : currentSale.getListOfItems()){
+        for (Item item : currentSaleDTO.getItemList()){
             receiptToString.append(item);
             receiptToString.append("************\n");
         }
 
         receiptToString.append("\n");
         receiptToString.append("Total price: ");
-        receiptToString.append(currentSale.getTotalPrice());
+        receiptToString.append(currentSaleDTO.getPaymentInformation().getRunningTotal());
         receiptToString.append(" SEK\n");
         receiptToString.append("Total VAT: ");
-        receiptToString.append(currentSale.getVATForTheEntireSale());
+        receiptToString.append(currentSaleDTO.getTotalVAT());
+        receiptToString.append(" SEK\n");
+        receiptToString.append("Discount: ");
+        receiptToString.append(currentSaleDTO.getDiscount().getDiscountAmount());
         receiptToString.append(" SEK\n");
         receiptToString.append("Cash payment: ");
-        receiptToString.append(currentSale.getCashPayment());
+        receiptToString.append(currentSaleDTO.getPaymentInformation().getPaidAmount());
         receiptToString.append(" SEK\n");
         receiptToString.append("Change: ");
-        receiptToString.append(currentSale.getChange());
+        receiptToString.append(currentSaleDTO.getPaymentInformation().getChange());
         receiptToString.append(" SEK\n\n");
         receiptToString.append("Thank you for your purchase!\n");
         receiptToString.append("*****************************");

@@ -15,7 +15,7 @@ public class Controller {
     private final Inventory inventory;
     private final SaleCatalog saleCatalog;
     private final Accounting accounting;
-    private final DiscountCalculator discCalculator;
+    private final CustomerCatalog customerCatalog;
     private Sale currentSale;
     private List<SaleObserver> saleObservers = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class Controller {
         this.accounting = creator.getAccounting();
         this.printer = new Printer();
         this.cashRegister = new CashRegister();
-        this.discCalculator = new DiscountCalculator();
+        this.customerCatalog = creator.getCustomerCatalog();
     }
 
     /**
@@ -43,20 +43,20 @@ public class Controller {
 
     /**
      * This method registers a newly scanned item.
-     * @param identifier Used to get the barcode of the newly scanned item
+     * @param identifier Used to get the barcode of the newly scanned item.
      * @return <code>SaleDTO</code>with the information about item name, price and running total
-     * @throws InvalidItemIdentifierException Thrown when an item with the specified identifier is not found
-     * @throws OperationFailedException Thrown when the operation fails and the reason is unknown
+     * @throws InvalidItemIdentifierException Thrown when item with the specified <code>identifier</code> is not found
+     * in the inventory database.
+     * @throws UnableToPerformOperationException Thrown when the operation cannot be performed and the reason is unknown.
      */
     public SaleDTO registerItem(ItemIdentifier identifier) throws InvalidItemIdentifierException,
-                                                                        OperationFailedException
-    {
+                                                                        UnableToPerformOperationException {
         try{
             ItemDTO foundItem = inventory.searchItemByBarcode(identifier);
             return currentSale.registerItem(foundItem);
         }
         catch(ServerNotRunningException serverExc){
-            throw new OperationFailedException("Item registration failed.", serverExc);
+            throw new UnableToPerformOperationException("Unable to register the item.", serverExc);
         }
     }
 
@@ -65,19 +65,40 @@ public class Controller {
      * @return The total price of the sale.
      */
     public Amount endSale(){
-        currentSale.calculateTotalPrice();
-        return currentSale.getTotalPrice();
+        currentSale.calculateVAT();
+        return currentSale.getPaymentInformation().getRunningTotal();
     }
 
     /**
-     * This method makes the correct system calls to the model to register payment and print a receipt.
-     * @param cashPayment Amount paid by the customer for the current sale
+     * This method checks the customer for membership
+     * @param searchedCustomer The specified customer that is checked for membership
+     * @return The <code>CustomerDTO</code> that has data about customers membership
      */
-    public void pay(Amount cashPayment){
-        currentSale.registerPayment(cashRegister, cashPayment);
-        inventory.updateInventory(currentSale);
-        accounting.updateAccounting(currentSale);
-        saleCatalog.logSale(currentSale);
+    public CustomerDTO checkIfCustomerIsAMember(CustomerDTO searchedCustomer){
+       return customerCatalog.searchCustomer(searchedCustomer);
+    }
+
+    /**
+     * This method makes the correct system calls to handle a discount request.
+     * @param discountRequestDTO The specified <code>DiscountRequestDTO</code> that has all the data needed to calculate
+     *                           a discount.
+     * @return The <code>SaleDTO</code>> with the information about the sale, incl. the discount
+     */
+    public SaleDTO handleDiscountRequest(DiscountRequestDTO discountRequestDTO){
+        return currentSale.handleDiscountRequest(discountRequestDTO);
+    }
+
+
+
+    /**
+     * This method makes the correct system calls to the model to register payment and print a receipt.
+     * @param paidAmount Amount paid by the customer for the current sale
+     */
+    public void pay(Amount paidAmount){
+        currentSale.registerPayment(cashRegister, paidAmount);
+        inventory.updateInventory(currentSale.createSaleDTO());
+        accounting.updateAccounting(currentSale.createSaleDTO());
+        saleCatalog.logSale(currentSale.createSaleDTO());
         currentSale.printReceipt(printer);
     }
 

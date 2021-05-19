@@ -25,7 +25,7 @@ public class Inventory {
      * @param searchedIdentifier Item identifier of the specified item
      * @return <code>ItemDTO</code> which barcode matches the searchedIdentifier's barcode
      * @throws InvalidItemIdentifierException Thrown when item with the specified barcode is not found.
-     * @throws ServerNotRunningException Thrown when the value of <code>searchedIdentifier</code> is 20.
+     * @throws ServerNotRunningException Thrown when there is a connection problem with the database server.
      */
     public ItemDTO searchItemByBarcode(ItemIdentifier searchedIdentifier) throws InvalidItemIdentifierException,
                                                                                     ServerNotRunningException {
@@ -43,9 +43,9 @@ public class Inventory {
 
     /**
      * This method is responsible for making the correct system calls to update the external inventory system.
-     * @param currentSale The current sale that includes all the necessary information needed to update the inventory.
+     * @param currentSaleDTO A DTO of the current sale that includes all the necessary information needed to update the inventory.
      */
-    public void updateInventory(Sale currentSale){
+    public void updateInventory(SaleDTO currentSaleDTO){
     }
 
     private void addItemsToItemList(){

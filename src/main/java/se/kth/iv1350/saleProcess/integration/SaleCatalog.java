@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class SaleCatalog {
 
-    private final List<Sale> saleLog = new ArrayList<>();
+    private final List<SaleDTO> saleLog = new ArrayList<>();
 
     /**
      * This method logs a completed sale.
-     * @param currentSale The specified sale that is logged
+     * @param currentSaleDTO A DTO of the specified sale that is logged
      */
-    public void logSale(Sale currentSale){
-        saleLog.add(currentSale);
+    public void logSale(SaleDTO currentSaleDTO){
+        saleLog.add(currentSaleDTO);
     }
 }

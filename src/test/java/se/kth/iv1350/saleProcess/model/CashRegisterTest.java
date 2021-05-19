@@ -16,11 +16,10 @@ class CashRegisterTest {
         Sale saleInstance = new Sale();
         ItemDTO itemDTO = new ItemDTO("milk", new Amount(45), 20, new ItemIdentifier(28));
         saleInstance.registerItem(itemDTO);
-        saleInstance.calculateTotalPrice();
         Amount paidAmt = new Amount(100);
         saleInstance.registerPayment(cashRegister, paidAmt);
-        Amount expResult = paidAmt.minus(saleInstance.getTotalPrice());
-        Amount result = cashRegister.getChange(saleInstance);
+        Amount expResult = paidAmt.minus(saleInstance.getPaymentInformation().getRunningTotal());
+        Amount result = cashRegister.getChange(saleInstance.getPaymentInformation());
         assertEquals(expResult, result, "Change was not calculated correctly");
     }
 

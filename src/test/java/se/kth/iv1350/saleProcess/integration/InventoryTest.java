@@ -36,16 +36,16 @@ class InventoryTest {
     }
 
     @Test
-    void testExceptionThrownWhenSearchedItemNotFound(){
+    void testInvalidItemIdentifierExceptionThrown(){
         ItemIdentifier nonExistingSearchedIdentifier = new ItemIdentifier(30);
-        ItemDTO nonExistingItem = new ItemDTO("meatballs", new Amount(42), 25, new ItemIdentifier(30));
 
         try{
             inventory.searchItemByBarcode(nonExistingSearchedIdentifier);
             fail("Item search with non-existing item was successful.");
         }
         catch(InvalidItemIdentifierException exc){
-            assertTrue(exc.getMessage().contains("Item identifier does not exist."), "Wrong exception message.");
+            assertTrue(exc.getMessage().contains("Item identifier " + nonExistingSearchedIdentifier.getBarcode() +
+                    " does not exist."), "Wrong exception message.");
         }
         catch (ServerNotRunningException exc){
             fail("Wrong exception thrown.");
@@ -53,7 +53,7 @@ class InventoryTest {
     }
 
     @Test
-    void testInventoryDatabaseCannotBeReached(){
+    void testServerNotRunningExceptionThrown(){
         ItemIdentifier identifierCausingServerException = new ItemIdentifier(20);
 
         try{

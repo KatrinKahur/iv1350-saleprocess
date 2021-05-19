@@ -1,6 +1,7 @@
 package se.kth.iv1350.saleProcess.view;
 
 import se.kth.iv1350.saleProcess.model.Amount;
+import se.kth.iv1350.saleProcess.model.PaymentInformation;
 import se.kth.iv1350.saleProcess.model.SaleObserver;
 
 /**
@@ -18,8 +19,8 @@ public class TotalRevenueView implements SaleObserver {
     }
 
     @Override
-    public void newPaymentAddedToSale(Amount totalPrice) {
-        updateTotalRevenue(totalPrice);
+    public void newPaymentAddedToSale(PaymentInformation paymentInformation) {
+        updateTotalRevenue(paymentInformation.getRunningTotal());
         printCurrentState();
     }
 

@@ -1,12 +1,11 @@
 package se.kth.iv1350.saleProcess.view;
 
 import se.kth.iv1350.saleProcess.controller.Controller;
-import se.kth.iv1350.saleProcess.controller.OperationFailedException;
-import se.kth.iv1350.saleProcess.integration.InvalidItemIdentifierException;
-import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
-import se.kth.iv1350.saleProcess.integration.SaleDTO;
+import se.kth.iv1350.saleProcess.controller.UnableToPerformOperationException;
+import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.util.ExceptionLogger;
+import se.kth.iv1350.saleProcess.util.TotalRevenueFileOutput;
 
 import java.io.IOException;
 
@@ -16,6 +15,7 @@ import java.io.IOException;
 public class View {
     Controller contr;
     ExceptionLogger logger;
+    SaleDTO saleDTO;
 
     /**
      * Creates a new instance of the class.
@@ -32,53 +32,75 @@ public class View {
      * Simulates a user input to test the programs all operations.
      */
     public void fakeProgramExecution(){
-        simulateASale();
-        simulateASale();
+        simulateASale(8,17,20,25,128,560);
+        simulateASale(1,2,9,9,129,250);
     }
 
-    private void simulateASale(){
+    private void simulateASale(int barcodeNr1, int barcodeNr2, int barcodeNr3, int barcodeNr4,
+                               int customerID, double paidAmt){
         contr.startSale();
         System.out.println("A new sale has been started.");
         System.out.println();
 
-        simulateItemRegistration(8);
-        simulateItemRegistration(17);
-        simulateItemRegistration(20);
-        simulateItemRegistration(25);
+        simulateItemRegistration(barcodeNr1);
+        simulateItemRegistration(barcodeNr2);
+        simulateItemRegistration(barcodeNr3);
+        simulateItemRegistration(barcodeNr4);
 
         Amount totalPrice = contr.endSale();
         System.out.println("The program ends the sale and returns the total price.");
         System.out.println();
         System.out.println("The total price of the sale is: " + totalPrice.toString() + " SEK \n");
 
+        simulateDiscountRequest(customerID);
+
         System.out.println("Enter payment: ");
-        Amount cashPayment = new Amount(150);
-        System.out.println("The program registers " + cashPayment + " SEK, " +
+        Amount paidAmount = new Amount(paidAmt);
+        System.out.println("The program registers " + paidAmount + " SEK, " +
                 "calculates the change and prints a receipt.");
         System.out.println();
-        contr.pay(cashPayment);
+        contr.pay(paidAmount);
     }
 
     private void simulateItemRegistration(int scannedBarcode){
-
         System.out.println("Enter a barcode: ");
         ItemIdentifier enteredIdentifier = new ItemIdentifier(scannedBarcode);
         System.out.println("Barcode " + scannedBarcode + " has been entered.");
 
         try{
-            SaleDTO saleInfo = contr.registerItem(enteredIdentifier);
+            saleDTO = contr.registerItem(enteredIdentifier);
             System.out.println("Item with barcode " + scannedBarcode + " has been registered. " +
                     "The program returns item description and running total.");
-            System.out.println(saleInfo.toString());
+            System.out.println(saleDTO.toString());
         }
-        catch(InvalidItemIdentifierException invalidItemExc){
-            System.out.println("ERROR: Item with barcode " + invalidItemExc.getInvalidItemIdentifier().getBarcode() +
-                    " cannot be found.");
+        catch(InvalidItemIdentifierException exc){
+            System.out.println("ERROR: Item identifier is invalid.");
         }
-        catch (OperationFailedException opFailedExc){
+        catch (UnableToPerformOperationException exc){
             System.out.println("ERROR: Item registration failed.");
-            logger.logException(opFailedExc);
+            logger.logException(exc);
         }
+    }
+
+    private void simulateDiscountRequest(int searchedCustomerID){
+        System.out.println("The customer requests discount.");
+        System.out.println("The program checks if the customer is registered as a member.");
+
+        CustomerDTO searchedCustomer = new CustomerDTO(searchedCustomerID);
+        CustomerDTO customerEligibleForDiscount = contr.checkIfCustomerIsAMember(searchedCustomer);
+
+        System.out.println("The program found a customer ID with number " +
+                customerEligibleForDiscount.getCustomerID() + ".\n");
+
+        DiscountRequestDTO discountRequest = new DiscountRequestDTO(saleDTO, customerEligibleForDiscount);
+
+        System.out.println("The program now handles the discount request.");
+
+        saleDTO = contr.handleDiscountRequest(discountRequest);
+
+        System.out.println("The applied discount amount is " + saleDTO.getDiscount().getDiscountAmount() + " SEK.");
+        System.out.println("The updated total price after applying discount is: "
+                + saleDTO.getPaymentInformation().getRunningTotal().toString() + " SEK.\n");
     }
 
 }

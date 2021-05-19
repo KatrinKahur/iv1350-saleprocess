@@ -35,6 +35,36 @@ public class Amount {
     }
 
     /**
+     * Checks if this <code>Amount</code> is greater than the specified <code>Amount</code>
+     * @param amountToCompare The specified <code>Amount</code> that this <code>Amount</code> is compared to
+     * @return Returns <code>true</code> if this <code>Amount</code> is greater than <code>amountToCompare</code>,
+     * <code>false</code> otherwise.
+     */
+    public boolean isGreaterThan(Object amountToCompare){
+        if (amountToCompare == null || !(amountToCompare instanceof Amount)){
+            return false;
+        }
+        Amount comparedAmount = (Amount) amountToCompare;
+
+        return (this.amount > comparedAmount.amount);
+    }
+
+    /**
+     * Checks if this <code>Amount</code> is smaller than the specified <code>Amount</code>
+     * @param amountToCompare The specified <code>Amount</code> that this <code>Amount</code> is compared to
+     * @return Returns <code>true</code> if this <code>Amount</code> is lesser than <code>amountToCompare</code>,
+     * <code>false</code> otherwise.
+     */
+    public boolean isLesserThan(Object amountToCompare){
+        if (amountToCompare == null || !(amountToCompare instanceof Amount)){
+            return false;
+        }
+        Amount comparedAmount = (Amount) amountToCompare;
+
+        return (this.amount < comparedAmount.amount);
+    }
+
+    /**
      * This method performs addition between two <code>Amount</code>s
      * @param amountToAdd The <code>Amount</code> that needs to be added to this <code>Amount</code>
      * @return The result of the addition

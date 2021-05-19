@@ -9,9 +9,9 @@ public class Accounting {
 
     /**
      * This class is responsible for making the correct system calls to send the sale to the external accounting system.
-     * @param currentSale The specified sale that is sent to accounting
+     * @param currentSaleDTO A DTO of the specified sale that is sent to accounting
      */
-    public void updateAccounting(Sale currentSale){
+    public void updateAccounting(SaleDTO currentSaleDTO){
 
     }
 }

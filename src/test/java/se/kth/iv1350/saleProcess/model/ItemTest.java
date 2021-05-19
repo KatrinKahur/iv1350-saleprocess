@@ -35,7 +35,8 @@ class ItemTest {
     void testToString() {
         ItemDTO itemDTO = new ItemDTO("yoghurt", new Amount(27), 20, new ItemIdentifier(3));
         Item itemInstance = new Item(itemDTO);
-        String expectedResult = "Item name: " + itemDTO.getName() + "\n" + "Item price: " + itemDTO.getPrice() + " SEK\n"
+        String expectedResult = "Item name: " + itemDTO.getName() + "\n" + "Item price: " + itemDTO.getPrice() + " SEK\n" +
+                "Item quantity: " + itemInstance.getQuantity() + "\n"
                 + "VAT: " + itemDTO.getVAT() + " %\n";
         String result = itemInstance.toString();
         assertEquals(expectedResult, result,"The returned strings do not have the same content.");

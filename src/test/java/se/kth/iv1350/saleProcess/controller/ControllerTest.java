@@ -1,13 +1,11 @@
 package se.kth.iv1350.saleProcess.controller;
 
-import org.intellij.lang.annotations.Identifier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.kth.iv1350.saleProcess.integration.*;
 import se.kth.iv1350.saleProcess.model.Amount;
 import se.kth.iv1350.saleProcess.model.CashRegister;
-import se.kth.iv1350.saleProcess.model.Item;
 import se.kth.iv1350.saleProcess.model.Sale;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +43,7 @@ class ControllerTest {
     }
 
     @Test
-    void testRegisterItem() {
+    void testRegisterItem(){
         ItemIdentifier identifier = new ItemIdentifier(16);
         ItemDTO item;
         try{
@@ -54,21 +52,38 @@ class ControllerTest {
           SaleDTO saleInfo = controller.registerItem(identifier);
           assertTrue(saleInfo.toString().contains(item.getName()), "Item with barcode 16 is not registered in the sale.");
         }
-        catch (InvalidItemIdentifierException | OperationFailedException | ServerNotRunningException exc){
+        catch (InvalidItemIdentifierException | ServerNotRunningException | UnableToPerformOperationException exc){
             fail("Item registration failed. Got exception.");
             exc.printStackTrace();
         }
     }
 
     @Test
-    void testOperationFailedExceptionThrownWhenRegisteringItem(){
-        ItemIdentifier identifierCausingServerNotRunningException = new ItemIdentifier(20);
+    void testUnableToPerformOperationExceptionThrownWhenRegisteringItem(){
+        ItemIdentifier identifierCausingException = new ItemIdentifier(20);
         try{
-            controller.registerItem(identifierCausingServerNotRunningException);
-            fail("Item causing ServerNotRunningException did not cause any exception.");
+            controller.registerItem(identifierCausingException);
+            fail("Item causing the server exception did not cause any exception.");
         }
-        catch (OperationFailedException exc){
-            assertTrue(exc.getMessage().contains("Item registration failed."), "Wrong exception message.");
+        catch (UnableToPerformOperationException exc){
+            assertTrue(exc.getMessage().contains("Unable to register the item."), "Wrong exception message.");
+        }
+        catch (Exception exc){
+            fail("Wrong exception thrown.");
+        }
+    }
+
+    @Test
+    void testInvalidItemIdentifierExceptionThrownWhenRegisteringItem(){
+        ItemIdentifier identifierCausingInvalidItemIdentifierException = new ItemIdentifier(25);
+        try{
+            controller.registerItem(identifierCausingInvalidItemIdentifierException);
+            fail("Item causing InvalidItemIdentifierException did not cause any exception.");
+        }
+        catch (InvalidItemIdentifierException exc){
+            assertTrue(exc.getMessage().contains("Item identifier " +
+                    identifierCausingInvalidItemIdentifierException.getBarcode() + " does not exist."),
+                    "Wrong exception message.");
         }
         catch (Exception exc){
             fail("Wrong exception thrown.");
@@ -94,8 +109,7 @@ class ControllerTest {
         Sale anotherSale = new Sale();
         anotherSale.registerItem(item);
         anotherSale.registerItem(anotherItem);
-        anotherSale.calculateTotalPrice();
-        Amount expResult = anotherSale.getTotalPrice();
+        Amount expResult = anotherSale.getPaymentInformation().getRunningTotal();
         controller.startSale();
 
         try{
@@ -103,7 +117,7 @@ class ControllerTest {
             controller.registerItem(anotherIdentifier);
         }
         catch (Exception exc){
-            fail("Items that should exist do not exist.");
+            fail("Item registration failed.");
             exc.printStackTrace();
         }
         Amount result = controller.endSale();
@@ -120,11 +134,10 @@ class ControllerTest {
             item = inventory.searchItemByBarcode(identifier);
         }
         catch (Exception exc){
-            fail("Item that should exist does not exist. Exception was thrown.");
+            fail("Failed to fetch the item from the inventory. An exception was thrown.");
             exc.printStackTrace();
         }
         sale.registerItem(item);
-        sale.calculateTotalPrice();
         Amount cashPayment = new Amount(100);
         sale.registerPayment(cashRegister, cashPayment);
         controller.startSale();

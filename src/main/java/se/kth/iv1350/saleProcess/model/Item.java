@@ -69,7 +69,10 @@ public class Item {
      */
     @Override
     public String toString(){
-        return "Item name: " + name + "\n" + "Item price: " + price + " SEK\n" + "VAT: " + VAT + " %\n";
+        return "Item name: " + name + "\n" +
+                "Item price: " + price + " SEK\n" +
+                "Item quantity: " + quantity + "\n" +
+                "VAT: " + VAT + " %\n";
     }
 
     /**

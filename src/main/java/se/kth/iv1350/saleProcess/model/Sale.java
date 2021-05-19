@@ -1,8 +1,6 @@
 package se.kth.iv1350.saleProcess.model;
 
-import se.kth.iv1350.saleProcess.integration.ItemDTO;
-import se.kth.iv1350.saleProcess.integration.Printer;
-import se.kth.iv1350.saleProcess.integration.SaleDTO;
+import se.kth.iv1350.saleProcess.integration.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +15,10 @@ public class Sale {
     private String saleTime;
     private final List<Item> listOfItems;
     private Item recentlyScannedItem;
-    private Amount runningTotal;
-    private Amount totalPrice;
-    private Amount cashPayment;
-    private Amount change;
-    private List<SaleObserver> saleObservers = new ArrayList<>();
+    private final PaymentInformation paymentInformation;
+    private Amount totalVAT;
+    private final Discount discount;
+    private final List<SaleObserver> saleObservers = new ArrayList<>();
 
     /**
      * Creates an instance of <code>Sale</code>
@@ -30,31 +27,8 @@ public class Sale {
         setSaleTime();
         receipt = new Receipt();
         listOfItems = new ArrayList<>();
-        runningTotal = new Amount();
-    }
-
-    /**
-     * This method gets the time and the date of the sale.
-     * @return A String with the time and the date of the sale
-     */
-    String getSaleTime(){
-        return saleTime;
-    }
-
-    /**
-     * This method gets the value of <code>runningTotal</code>
-     * @return The value of <code>runningTotal</code>
-     */
-     Amount getRunningTotal(){
-        return runningTotal;
-    }
-
-    /**
-     * This method gets the most recently scanned item.
-     * @return The most recently scanned item
-     */
-    public Item getRecentlyScannedItem(){
-        return recentlyScannedItem;
+        paymentInformation = new PaymentInformation();
+        discount = new Discount();
     }
 
     /**
@@ -74,42 +48,17 @@ public class Sale {
             setRecentlyScannedItem(existingItem);
         }
 
-        updateRunningTotal();
-        return createSaleInformationReturnedToView();
+        paymentInformation.updateRunningTotal(recentlyScannedItem);
+        return createSaleDTO();
     }
 
     /**
-     * This method calculates the total price of the sale.
-     */
-    public void calculateTotalPrice(){
-        totalPrice = new Amount(runningTotal.getAmount());
-    }
-
-    /**
-     * This method gets the value of totalPrice
-     * @return The value of totalPrice
-     */
-    public Amount getTotalPrice(){
-        return totalPrice;
-    }
-
-    /**
-     * This method gets the items in listOfItems
-     * @return The value of listOfItems
-     */
-    List<Item> getListOfItems(){
-        return listOfItems;
-    }
-
-    /**
-     * This method makes the correct system calls to register a cash payment.
+     * This method makes the correct system calls to register a cash paymentInformation.
      * @param cashRegister The cash register used to register cash payments
-     * @param cashPayment Paid amount
+     * @param paidAmount Paid <code>Amount</code>
      */
-    public void registerPayment(CashRegister cashRegister, Amount cashPayment){
-        setCashPayment(cashPayment);
-        cashRegister.registerPayment(this);
-        setChange(cashRegister.getChange(this));
+    public void registerPayment(CashRegister cashRegister, Amount paidAmount){
+        paymentInformation.pay(paidAmount, cashRegister);
         notifyObservers();
     }
 
@@ -118,7 +67,7 @@ public class Sale {
      * @param printer The object representing the printer
      */
     public void printReceipt(Printer printer){
-        receipt.sendSaleToReceipt(this);
+        receipt.sendSaleToReceipt(createSaleDTO());
         printer.printReceipt(receipt);
     }
 
@@ -139,44 +88,46 @@ public class Sale {
     }
 
     /**
+     * This method handles a discount request by first checking if there are any discounts the customer is eligible for
+     * and then applying them to the total price.
+     * @param discountRequestDTO The specified <code>DiscountRequestDTO</code> that contains all the data needed to
+     *                           calculate a discount
+     * @return <code>SaleDTO</code>> with the information about current sale, incl. the discount
+     */
+    public SaleDTO handleDiscountRequest(DiscountRequestDTO discountRequestDTO){
+        Amount discountAmount = DiscountRuleFactory.getFactory().getDefaultDiscountRule().tryDiscount(discountRequestDTO);
+        discount.setDiscountAmount(discountAmount);
+        paymentInformation.applyDiscount(discount);
+        return createSaleDTO();
+    }
+
+    /**
      * This method gets the <code>Amount</code> of VAT for the entire sale.
-     * @return <code>Amount</code> of VAT for the entire sale
      */
-    Amount getVATForTheEntireSale(){
-        Amount totalVAT = new Amount();
-        for(Item item : listOfItems){
+    public void calculateVAT(){
+        totalVAT = new Amount();
+        for(Item item : listOfItems)
             totalVAT = totalVAT.plus(item.getVATConvertedIntoAmount());
-        }
-        return totalVAT;
     }
 
     /**
-     * This method gets the value of cashPayment
-     * @return The value of cashPayment
+     * Creates a DTO of <code>Sale</code>
+     * @return The created <code>SaleDTO</code> that is a copy of <code>Sale</code>
      */
-    Amount getCashPayment(){
-        return cashPayment;
+    public SaleDTO createSaleDTO(){
+        return new SaleDTO(saleTime, recentlyScannedItem, listOfItems, paymentInformation, totalVAT, discount);
     }
 
     /**
-     * This method gets the value of change
-     * @return The value of change
+     * @return Returns the <code>paymentInformation</code> object.
      */
-    Amount getChange(){
-        return change;
+    public PaymentInformation getPaymentInformation(){
+        return paymentInformation;
     }
 
     private void notifyObservers(){
         for (SaleObserver observer : saleObservers)
-            observer.newPaymentAddedToSale(totalPrice);
-    }
-
-    private void setCashPayment(Amount cashPayment){
-        this.cashPayment = cashPayment;
-    }
-
-    private void setChange(Amount change){
-        this.change = change;
+            observer.newPaymentAddedToSale(paymentInformation);
     }
 
     private void setSaleTime(){
@@ -190,14 +141,6 @@ public class Sale {
 
     private void addRecentlyScannedItemToTheItemList(){
         listOfItems.add(recentlyScannedItem);
-    }
-
-    private void updateRunningTotal(){
-        runningTotal = runningTotal.plus(recentlyScannedItem.getPriceWithVAT());
-    }
-
-    private SaleDTO createSaleInformationReturnedToView(){
-        return new SaleDTO(runningTotal, recentlyScannedItem);
     }
 
     private Item checkForExistingItem(ItemDTO foundItem){

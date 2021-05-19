@@ -22,6 +22,8 @@ class ViewTest {
     private View view;
     private Sale sale;
     private Inventory inventory;
+    private ItemDTO item;
+    private ItemDTO anotherItem;
 
     @BeforeEach
     void setUp()throws IOException{
@@ -47,11 +49,17 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionItemsRegisteredInTheSale() throws InvalidItemIdentifierException {
-        ItemIdentifier identifier = new ItemIdentifier(8);
-        ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
-        ItemDTO anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+    void testFakeProgramExecutionItemsRegisteredInTheSale() {
+        try{
+            ItemIdentifier identifier = new ItemIdentifier(8);
+            ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
+            item = inventory.searchItemByBarcode(identifier);
+            anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        }
+        catch (InvalidItemIdentifierException exc){
+            fail("Got exception.");
+            exc.getCause();
+        }
         sale.registerItem(item);
         sale.registerItem(anotherItem);
         view.fakeProgramExecution();
@@ -61,9 +69,15 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionSaleDTOWithRunningTotalReturnedAfterRegisteringTheFirstItem() throws InvalidItemIdentifierException{
-        ItemIdentifier identifier = new ItemIdentifier(8);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
+    void testFakeProgramExecutionSaleDTOWithRunningTotalReturnedAfterRegisteringTheFirstItem(){
+        try{
+            ItemIdentifier identifier = new ItemIdentifier(8);
+            item = inventory.searchItemByBarcode(identifier);
+        }
+        catch(InvalidItemIdentifierException exc){
+            fail("Got exception.");
+            exc.printStackTrace();
+        }
         Amount itemPriceWithoutVAT = item.getPrice();
         Amount itemVATDividedByHundred = new Amount(item.getVAT()/100);
         Amount itemPriceWithVAT = itemPriceWithoutVAT.multiply(itemVATDividedByHundred);
@@ -74,48 +88,59 @@ class ViewTest {
     }
 
     @Test
-    void testFakeProgramExecutionCorrectTotalPricePrinted() throws InvalidItemIdentifierException {
-        ItemIdentifier identifier = new ItemIdentifier(8);
-        ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
-        ItemDTO anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+    void testFakeProgramExecutionCorrectTotalPricePrinted(){
+        try{
+            ItemIdentifier identifier = new ItemIdentifier(8);
+            ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
+            item = inventory.searchItemByBarcode(identifier);
+            anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        }
+        catch (InvalidItemIdentifierException exc){
+            fail("Got exception.");
+            exc.printStackTrace();
+        }
         sale.registerItem(item);
         sale.registerItem(anotherItem);
-        sale.calculateTotalPrice();
         view.fakeProgramExecution();
         String result = outputContent.toString();
-        assertTrue(result.contains(sale.getTotalPrice().toString()), "The presented total price is incorrect.");
+        assertTrue(result.contains(sale.getPaymentInformation().getRunningTotal().toString()),
+                "The presented total price is incorrect.");
+
     }
 
     @Test
-    void testFakeProgramExecutionReceiptIsPrinted() throws InvalidItemIdentifierException{
-        ItemIdentifier identifier = new ItemIdentifier(8);
-        ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
-        ItemDTO item = inventory.searchItemByBarcode(identifier);
-        ItemDTO anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+    void testFakeProgramExecutionReceiptIsPrinted(){
+        try{
+            ItemIdentifier identifier = new ItemIdentifier(8);
+            ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
+            item = inventory.searchItemByBarcode(identifier);
+            anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
+        }
+        catch (InvalidItemIdentifierException exc){
+            fail("Got exception.");
+            exc.printStackTrace();
+        }
         sale.registerItem(item);
         sale.registerItem(anotherItem);
-        sale.calculateTotalPrice();
         view.fakeProgramExecution();
         String result = outputContent.toString();
         assertTrue(result.contains("Thank you for your purchase!"), "The receipt has not been printed.");
     }
 
     @Test
-    void testFakeProgramExecutionOperationFailedExceptionCorrectMessagePrinted(){
+    void testFakeProgramExecutionUnableToPerformOperationExceptionCorrectMessagePrinted(){
         view.fakeProgramExecution();
         String result = outputContent.toString();
         assertTrue(result.contains("ERROR: Item registration failed."), "The output produced by the view after" +
-                    " catching the OperationFailedException is incorrect.");
+                    " catching the exception is incorrect.");
     }
 
     @Test
     void testFakeProgramExecutionInvalidItemIdentifierExceptionCorrectMessagePrinted(){
-        int barcodeOfAnItemThatDoesNotExist = 25;
         view.fakeProgramExecution();
         String result = outputContent.toString();
-        assertTrue(result.contains("ERROR: Item with barcode " + barcodeOfAnItemThatDoesNotExist + " cannot be found."), "The output produced by the view after" +
-                " catching the InvalidItemIdentifierException is incorrect.");
+        assertTrue(result.contains("ERROR: Item identifier is invalid."), "The output produced by the view after" +
+                " catching the exception is incorrect.");
     }
 
 }

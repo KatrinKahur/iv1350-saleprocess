@@ -14,24 +14,24 @@ public class CashRegister {
     }
 
     /**
-     * This method adds payment to the cash register
-     * @param currentSale Used to get the total price of the sale.
+     * This method adds paymentInformation to the cash register
+     * @param paymentInformation Used to get the paid amount for the sale.
      */
-    void registerPayment(Sale currentSale){
-        increaseBalance(currentSale.getTotalPrice());
+    void registerPayment(PaymentInformation paymentInformation){
+        increaseBalance(paymentInformation.getPaidAmount());
     }
 
     /**
-     * This method gets the change.
-     * @param currentSale Used to get the paid amount and the total price of the sale.
+     * This method calculates the change.
+     * @param paymentInformation Used to get the paid amount and the running total.
      * @return The calculated change
      */
-    Amount getChange(Sale currentSale){
-        return currentSale.getCashPayment().minus(currentSale.getTotalPrice());
+    Amount getChange(PaymentInformation paymentInformation){
+        return paymentInformation.getPaidAmount().minus(paymentInformation.getRunningTotal());
     }
 
-    private void increaseBalance(Amount amount){
-        balance = balance.plus(amount);
+    private void increaseBalance(Amount paidAmount){
+        balance = balance.plus(paidAmount);
     }
 
 

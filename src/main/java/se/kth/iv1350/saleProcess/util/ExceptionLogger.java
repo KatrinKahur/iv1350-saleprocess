@@ -18,6 +18,10 @@ public class ExceptionLogger {
         excMsgLogFile = new PrintWriter(new FileWriter("excMsg-log.txt"), true);
     }
 
+    /**
+     * Logs exception to a file.
+     * @param loggedExc The logged exception
+     */
     public void logException(Exception loggedExc){
         StringBuilder logMessage = new StringBuilder();
         logMessage.append("Exception name: ");

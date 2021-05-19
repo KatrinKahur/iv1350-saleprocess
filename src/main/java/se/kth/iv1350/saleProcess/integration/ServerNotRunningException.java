@@ -1,7 +1,7 @@
 package se.kth.iv1350.saleProcess.integration;
 
 /**
- * Thrown everytime when the user tries to fetch an item with barcode 20 from the inventory.
+ * Thrown when there is a connection problem with a database server.
  */
 public class ServerNotRunningException extends RuntimeException {
     /**

@@ -7,8 +7,8 @@ package se.kth.iv1350.saleProcess.model;
 public interface SaleObserver{
     /**
      * Invoked when a new payment has been registered.
-     * @param totalPrice The total price of a sale.
+     * @param paymentInformation Has the total price of the sale.
      */
-    void newPaymentAddedToSale(Amount totalPrice);
+    void newPaymentAddedToSale(PaymentInformation paymentInformation);
 
 }

@@ -3,7 +3,7 @@ package se.kth.iv1350.saleProcess.util;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.kth.iv1350.saleProcess.controller.OperationFailedException;
+import se.kth.iv1350.saleProcess.controller.UnableToPerformOperationException;
 import se.kth.iv1350.saleProcess.integration.InvalidItemIdentifierException;
 import se.kth.iv1350.saleProcess.integration.ItemIdentifier;
 import se.kth.iv1350.saleProcess.integration.ServerNotRunningException;
@@ -38,10 +38,10 @@ class ExceptionLoggerTest {
     @Test
     void logException()throws IOException{
         ServerNotRunningException serverExc = new ServerNotRunningException();
-        OperationFailedException opFailedExc = new OperationFailedException("Item registration failed. ", serverExc);
-        instance.logException(opFailedExc);
-        String expResultName = "Exception name: " + opFailedExc.getCause();
-        String expResultMessage = "Exception message: " + opFailedExc.getMessage();
+        UnableToPerformOperationException unableToPerformExc = new UnableToPerformOperationException("Item registration failed. ", serverExc);
+        instance.logException(unableToPerformExc);
+        String expResultName = "Exception name: " + unableToPerformExc.getCause();
+        String expResultMessage = "Exception message: " + unableToPerformExc.getMessage();
         assertTrue(fileContains(expResultName), "Wrong printout.");
         assertTrue(fileContains(expResultMessage), "Wrong exception message.");
     }

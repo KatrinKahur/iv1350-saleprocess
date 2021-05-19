@@ -1,6 +1,7 @@
-package se.kth.iv1350.saleProcess.view;
+package se.kth.iv1350.saleProcess.util;
 
 import se.kth.iv1350.saleProcess.model.Amount;
+import se.kth.iv1350.saleProcess.model.PaymentInformation;
 import se.kth.iv1350.saleProcess.model.SaleObserver;
 
 import java.io.FileWriter;
@@ -19,7 +20,7 @@ public class TotalRevenueFileOutput implements SaleObserver {
     /**
      * Creates a new instance of <code>TotalRevenueFileOutput</code>
      */
-    TotalRevenueFileOutput(){
+    public TotalRevenueFileOutput(){
         totalRevenue = new Amount();
         try{
             fileOutput = new PrintWriter(new FileWriter("total-revenue.txt"), true);
@@ -31,8 +32,8 @@ public class TotalRevenueFileOutput implements SaleObserver {
     }
 
     @Override
-    public void newPaymentAddedToSale(Amount totalPrice) {
-        updateTotalRevenue(totalPrice);
+    public void newPaymentAddedToSale(PaymentInformation paymentInformation) {
+        updateTotalRevenue(paymentInformation.getRunningTotal());
         printCurrentStateToFile();
     }
 
