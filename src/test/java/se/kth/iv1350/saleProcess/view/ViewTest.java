@@ -60,8 +60,6 @@ class ViewTest {
             fail("Got exception.");
             exc.getCause();
         }
-        sale.registerItem(item);
-        sale.registerItem(anotherItem);
         view.fakeProgramExecution();
         String result = outputContent.toString();
         assertTrue(result.contains(item.getName()), "Incorrect name of the item with barcode 8 returned");
@@ -81,7 +79,6 @@ class ViewTest {
         Amount itemPriceWithoutVAT = item.getPrice();
         Amount itemVATDividedByHundred = new Amount(item.getVAT()/100);
         Amount itemPriceWithVAT = itemPriceWithoutVAT.multiply(itemVATDividedByHundred);
-        sale.registerItem(item);
         view.fakeProgramExecution();
         String result = outputContent.toString();
         assertTrue(result.contains(itemPriceWithVAT.toString()), "Running total after registering item with barcode 8 is not returned.");
@@ -110,18 +107,6 @@ class ViewTest {
 
     @Test
     void testFakeProgramExecutionReceiptIsPrinted(){
-        try{
-            ItemIdentifier identifier = new ItemIdentifier(8);
-            ItemIdentifier anotherIdentifier = new ItemIdentifier(17);
-            item = inventory.searchItemByBarcode(identifier);
-            anotherItem = inventory.searchItemByBarcode(anotherIdentifier);
-        }
-        catch (InvalidItemIdentifierException exc){
-            fail("Got exception.");
-            exc.printStackTrace();
-        }
-        sale.registerItem(item);
-        sale.registerItem(anotherItem);
         view.fakeProgramExecution();
         String result = outputContent.toString();
         assertTrue(result.contains("Thank you for your purchase!"), "The receipt has not been printed.");

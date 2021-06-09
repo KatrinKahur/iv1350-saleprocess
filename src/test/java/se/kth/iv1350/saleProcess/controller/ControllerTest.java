@@ -17,7 +17,6 @@ class ControllerTest {
     private Controller controller;
     private CatalogCreator catalogCreator;
     private Inventory inventory;
-    private Printer printer;
     ByteArrayOutputStream outputContent;
     PrintStream originalSystemOut;
 
@@ -27,7 +26,6 @@ class ControllerTest {
         originalSystemOut = System.out;
         System.setOut(new PrintStream(outputContent));
         catalogCreator = new CatalogCreator();
-        printer = new Printer();
         controller = new Controller(catalogCreator);
         inventory = catalogCreator.getInventory();
     }
@@ -37,7 +35,6 @@ class ControllerTest {
         outputContent = null;
         System.setOut(originalSystemOut);
         catalogCreator = null;
-        printer = null;
         controller = null;
         inventory = null;
     }
